@@ -52,8 +52,6 @@ test('Normalize error.errors in non-AggregateError', (t) => {
   const innerError = 'inner'
   error.errors = [innerError]
   const errorA = normalizeException(error)
-  t.false(isEnum.call(errorA, 'errors'))
-  t.true(errorA.errors[0] instanceof Error)
   t.is(errorA.errors[0].message, innerError)
 })
 
