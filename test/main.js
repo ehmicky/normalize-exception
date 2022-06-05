@@ -26,6 +26,13 @@ each([undefined, true, ''], ({ title }, value) => {
     t.is(normalizeException(error).message, '')
     t.false(isEnum.call(error, 'message'))
   })
+
+  test(`Fix invalid error.stack | ${title}`, (t) => {
+    const error = new Error('test')
+    error.stack = value
+    t.true(normalizeException(error).stack.includes('at '))
+    t.false(isEnum.call(error, 'stack'))
+  })
 })
 
 test.serial('Fix invalid error.name without constructor names', (t) => {
