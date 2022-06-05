@@ -29,17 +29,19 @@ test.serial('New stack internal code removal with prepareStackTrace()', (t) => {
 })
 
 test.serial('New stack internal code removal with stackTraceLimit low', (t) => {
+  const { stackTraceLimit } = Error
   // eslint-disable-next-line fp/no-mutation
   Error.stackTraceLimit = 6
   t.true(normalizeException().stack.includes('at '))
-  // eslint-disable-next-line fp/no-delete
-  delete Error.stackTraceLimit
+  // eslint-disable-next-line fp/no-mutation
+  Error.stackTraceLimit = stackTraceLimit
 })
 
 test.serial('New stack internal code removal with stackTraceLimit 0', (t) => {
+  const { stackTraceLimit } = Error
   // eslint-disable-next-line fp/no-mutation
   Error.stackTraceLimit = 0
   t.false(normalizeException().stack.trim().endsWith('Error:'))
-  // eslint-disable-next-line fp/no-delete
-  delete Error.stackTraceLimit
+  // eslint-disable-next-line fp/no-mutation
+  Error.stackTraceLimit = stackTraceLimit
 })
