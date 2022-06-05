@@ -85,6 +85,11 @@ test('Plain-objects errors can have stacks', (t) => {
   t.false(isEnum.call(error, 'stack'))
 })
 
+test('Plain-objects errors without stacks get one', (t) => {
+  const error = normalizeException({})
+  t.true(error.stack.includes('at '))
+})
+
 test('Plain-objects errors can have causes', (t) => {
   const cause = new Error('test')
   const error = normalizeException({ cause })
