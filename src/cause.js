@@ -6,15 +6,13 @@ import { setErrorProperty } from './set.js'
 //  - the inner error was `undefined`
 //  - the cause was optional
 // We interpret in the second way, which might be more common.
-export const normalizeCause = function (error, parents, recurseException) {
+export const normalizeCause = function (error, recurseException) {
   if (!('cause' in error)) {
     return
   }
 
   const cause =
-    error.cause === undefined
-      ? error.cause
-      : recurseException(error.cause, parents)
+    error.cause === undefined ? error.cause : recurseException(error.cause)
 
   if (cause === undefined) {
     // eslint-disable-next-line fp/no-delete

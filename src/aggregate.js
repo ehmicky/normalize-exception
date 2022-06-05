@@ -5,11 +5,11 @@ import { setErrorProperty } from './set.js'
 // Skip `error.errors` that are infinitely recursive.
 // We filter out `undefined` `errors` for the same reason we remove `undefined`
 // `error.cause`.
-export const normalizeAggregate = function (error, parents, recurseException) {
+export const normalizeAggregate = function (error, recurseException) {
   if (Array.isArray(error.errors)) {
     const aggregateErrors = error.errors
       .filter(isDefined)
-      .map((aggregateError) => recurseException(aggregateError, parents))
+      .map(recurseException)
       .filter(Boolean)
     setErrorProperty(error, 'errors', aggregateErrors)
   } else if (isAggregateError(error)) {
