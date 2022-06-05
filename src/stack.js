@@ -29,8 +29,7 @@ const STACK_LINE_REGEXP = /^\s*at /u
 
 // Generate a new stack trace
 const getStackTrace = function () {
-  // eslint-disable-next-line unicorn/error-message
-  const lines = new Error('').stack.split('\n')
+  const lines = new Error(' ').stack.split('\n')
   const index = findInternalIndex(lines)
   return lines.slice(index).join('\n')
 }
@@ -44,7 +43,7 @@ const findInternalIndex = function (lines) {
   const index = findLastIndex(lines, isInternalStackLine)
 
   if (index === -1) {
-    return 1
+    return 0
   }
 
   return lines.length - 1 === index ? index : index + 1
@@ -69,5 +68,6 @@ const isInternalStackLine = function (line) {
 
 // How the top-level function appears in a stack trace.
 // Since stack traces are implementation-specific, we must be very conservative
-// and careful. Also, we must ensure transpilation does not change this.
-const NORMALIZE_ERROR_LINE = 'at normalizeError'
+// and careful. Also, we must ensure transpilation does not change this, nor
+// that the top function name changes.
+const NORMALIZE_ERROR_LINE = 'at normalizeException'
