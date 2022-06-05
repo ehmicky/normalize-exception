@@ -65,7 +65,7 @@ test('Fix invalid error.stack with no stack lines', (t) => {
 })
 
 test('Normalize error.cause', (t) => {
-  const cause = 'test'
+  const cause = 'inner'
   const error = new Error('test', { cause })
   const errorA = normalizeException(error)
   t.true(errorA.cause instanceof Error)
@@ -83,6 +83,14 @@ test('Handle infinite error.cause', (t) => {
   error.cause = error
   const errorA = normalizeException(error)
   t.false('cause' in errorA)
+})
+
+test('Normalize error.errors', (t) => {
+  const innerError = 'inner'
+  const error = new AggregateError([innerError], 'test')
+  const errorA = normalizeException(error)
+  t.true(errorA.errors[0] instanceof Error)
+  t.is(errorA.errors[0].message, innerError)
 })
 
 test('Handle infinite error.errors', (t) => {
