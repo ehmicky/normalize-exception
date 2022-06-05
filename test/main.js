@@ -69,6 +69,7 @@ test('Normalize error.cause', (t) => {
   const error = new Error('test', { cause })
   const errorA = normalizeException(error)
   t.true(errorA.cause instanceof Error)
+  t.false(isEnum.call(error, 'cause'))
   t.is(errorA.cause.message, cause)
 })
 
@@ -89,6 +90,7 @@ test('Normalize error.errors', (t) => {
   const innerError = 'inner'
   const error = new AggregateError([innerError], 'test')
   const errorA = normalizeException(error)
+  t.false(isEnum.call(error, 'errors'))
   t.true(errorA.errors[0] instanceof Error)
   t.is(errorA.errors[0].message, innerError)
 })
