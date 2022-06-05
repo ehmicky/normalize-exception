@@ -58,6 +58,12 @@ each(['name', 'message'], ({ title }, propName) => {
   })
 })
 
+test('Fix invalid error.stack with no stack lines', (t) => {
+  const error = new TypeError('test')
+  error.stack = 'test'
+  t.true(normalizeException(error).stack.includes('at '))
+})
+
 test('Handle infinite error.cause', (t) => {
   const error = new Error('test')
   error.cause = error
