@@ -6,12 +6,63 @@
 
 Normalize exceptions/errors.
 
-Work in progress!
+JavaScript can `throw` any value including strings, objects
+(`{ message: "..." }`) or even `undefined`. This normalizes those exceptions to
+`Error` instances.
+
+It also fixes any missing or invalid error properties: `name`, `message`,
+`stack`, `cause`, `errors`.
 
 # Examples
 
-```js
+## Invalid types
 
+<!-- eslint-disable unicorn/no-null, no-throw-literal -->
+
+```js
+import normalizeException from 'normalize-exception'
+
+try {
+  throw null
+} catch (error) {
+  const normalizedError = normalizeException(error)
+  console.log(normalizedError) // Error: null
+  // Without `normalizeException()`, this would throw
+  console.log(normalizedError.name)
+}
+```
+
+```js
+console.log(normalizeException('message')) // Error: message
+```
+
+```js
+console.log(normalizeException({ name: 'TypeError', message: 'message' })) // TypeError: message
+```
+
+## Invalid stack
+
+```js
+const error = new TypeError('message')
+console.log(error.stack) // TypeError: message
+
+// `error.stack` is cached, so it does not update
+error.message += ' otherMessage'
+console.log(error.stack) // TypeError: message
+
+const normalizedError = normalizeException(error)
+console.log(normalizedError.stack) // TypeError: message otherMessage
+```
+
+## Invalid properties
+
+```js
+const error = new Error('message', { cause: 'innerError' })
+console.log(error.cause instanceof Error) // false
+
+const normalizedError = normalizeException(error)
+console.log(normalizedError.cause instanceof Error) // true
+console.log(normalizedError.cause) // Error: innerError
 ```
 
 # Install
