@@ -15,7 +15,7 @@ test('New stack includes name and message', (t) => {
   t.true(normalizeException().stack.includes('Error: undefined'))
 })
 
-test('New stack does not included internal code', (t) => {
+test('New stack does not include internal code', (t) => {
   t.true(normalizeException().stack.includes('stack.js'))
   t.false(normalizeException().stack.includes('normalizeException'))
 })
