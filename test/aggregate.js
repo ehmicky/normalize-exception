@@ -14,7 +14,7 @@ const hasAggregateError = function () {
 }
 
 if (hasAggregateError()) {
-  test('Normalize error.errors', (t) => {
+  test('Normalize error.errors in AggregateError', (t) => {
     const innerError = 'inner'
     const error = new AggregateError([innerError], 'test')
     const errorA = normalizeException(error)
@@ -47,9 +47,20 @@ if (hasAggregateError()) {
   })
 }
 
+test('Normalize error.errors in non-AggregateError', (t) => {
+  const error = new Error('test')
+  const innerError = 'inner'
+  error.errors = [innerError]
+  const errorA = normalizeException(error)
+  t.false(isEnum.call(errorA, 'errors'))
+  t.true(errorA.errors[0] instanceof Error)
+  t.is(errorA.errors[0].message, innerError)
+})
+
 test('Fix invalid error.errors to non-AggregateError', (t) => {
   const error = new Error('test')
-  error.errors = new Error('inner')
+  const innerError = 'inner'
+  error.errors = innerError
   const errorA = normalizeException(error)
   t.false('errors' in errorA)
 })
