@@ -2,7 +2,7 @@ import { createError } from './create.js'
 import { setErrorProperty } from './set.js'
 import { setFullStack, getStackHeader, fixStack } from './stack.js'
 
-// Ensure we are using an Error instance
+// Ensure an exception is an Error instance with normal properties
 export default function normalizeException(error) {
   return recurseException(error, [])
 }
