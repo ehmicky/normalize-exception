@@ -7,18 +7,24 @@ export const setFullStack = function (error) {
   setErrorProperty(error, 'stack', stack)
 }
 
-// Expected first line of `error.stack`
-export const getStackHeader = function (error) {
-  return `${error.name}: ${error.message}`
-}
-
 // Ensure `error.stack` reflects `error.name` and `error.message`
-export const fixStack = function (error, header) {
+export const fixStack = function (error) {
+  const header = getStackHeader(error)
+
+  if (error.stack.startsWith(header)) {
+    return
+  }
+
   const lines = error.stack.split('\n')
   const index = lines.findIndex(isStackLine)
   const linesA = index === -1 ? getStackTrace() : lines.slice(index)
   const stack = [header, ...linesA].join('\n')
   setErrorProperty(error, 'stack', stack)
+}
+
+// Expected first line of `error.stack`
+const getStackHeader = function (error) {
+  return `${error.name}: ${error.message}`
 }
 
 const isStackLine = function (line) {

@@ -2,7 +2,7 @@ import { normalizeAggregate } from './aggregate.js'
 import { normalizeCause } from './cause.js'
 import { createError } from './create.js'
 import { setErrorProperty } from './set.js'
-import { setFullStack, getStackHeader, fixStack } from './stack.js'
+import { setFullStack, fixStack } from './stack.js'
 
 // Ensure an exception is an Error instance with normal properties
 export default function normalizeException(error) {
@@ -47,11 +47,7 @@ const normalizeStack = function (error) {
     setFullStack(error)
   }
 
-  const header = getStackHeader(error)
-
-  if (!error.stack.startsWith(header)) {
-    fixStack(error, header)
-  }
+  fixStack(error)
 }
 
 const isDefinedString = function (value) {
