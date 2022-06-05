@@ -6,21 +6,23 @@ import { setFullStack, fixStack } from './stack.js'
 
 // Ensure an exception is an Error instance with normal properties
 export default function normalizeException(error) {
-  return recurseException([], error)
+  return recurseException(error, [])
 }
 
-const recurseException = function (parents, error) {
+const recurseException = function (error, parents) {
   if (parents.includes(error)) {
     return
   }
 
-  const parentsA = [...parents, error]
+  const recurse = (innerError) =>
+    recurseException(innerError, [...parents, error])
+
   const errorA = error instanceof Error ? error : createError(error)
   normalizeName(errorA)
   normalizeMessage(errorA)
   normalizeStack(errorA)
-  normalizeCause(errorA, recurseException.bind(undefined, parentsA))
-  normalizeAggregate(errorA, recurseException.bind(undefined, parentsA))
+  normalizeCause(errorA, recurse)
+  normalizeAggregate(errorA, recurse)
   return errorA
 }
 
