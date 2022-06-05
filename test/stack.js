@@ -28,10 +28,18 @@ test.serial('New stack internal code removal with prepareStackTrace()', (t) => {
   delete Error.prepareStackTrace
 })
 
-test.serial('New stack internal code removal with stackTraceLimit', (t) => {
+test.serial('New stack internal code removal with stackTraceLimit low', (t) => {
   // eslint-disable-next-line fp/no-mutation
   Error.stackTraceLimit = 6
   t.true(normalizeException().stack.includes('at '))
+  // eslint-disable-next-line fp/no-delete
+  delete Error.stackTraceLimit
+})
+
+test.serial('New stack internal code removal with stackTraceLimit 0', (t) => {
+  // eslint-disable-next-line fp/no-mutation
+  Error.stackTraceLimit = 0
+  t.true(normalizeException().stack.trim().endsWith('Error:'))
   // eslint-disable-next-line fp/no-delete
   delete Error.stackTraceLimit
 })

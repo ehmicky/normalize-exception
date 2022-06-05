@@ -43,7 +43,7 @@ const findInternalIndex = function (lines) {
   const index = findLastIndex(lines, isInternalStackLine)
 
   if (index === -1) {
-    return 0
+    return 1
   }
 
   return lines.length - 1 === index ? index : index + 1
