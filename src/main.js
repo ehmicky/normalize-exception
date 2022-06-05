@@ -1,3 +1,4 @@
+import { normalizeAggregate } from './aggregate.js'
 import { createError } from './create.js'
 import { setErrorProperty } from './set.js'
 import { setFullStack, getStackHeader, fixStack } from './stack.js'
@@ -18,7 +19,7 @@ const recurseException = function (error, parents) {
   normalizeMessage(errorA)
   normalizeStack(errorA)
   normalizeCause(errorA, parentsA)
-  normalizeAggregate(errorA, parentsA)
+  normalizeAggregate(errorA, parentsA, recurseException)
   return errorA
 }
 
@@ -77,31 +78,5 @@ const normalizeCause = function (error, parents) {
     delete error.cause
   } else {
     setErrorProperty(error, 'cause', cause)
-  }
-}
-
-// Recurse over `error.errors`.
-// Also ensure `AggregateError` instance have an `errors` property.
-// Skip `error.errors` that are infinitely recursive.
-const normalizeAggregate = function (error, parents) {
-  if (Array.isArray(error.errors)) {
-    const aggregateErrors = error.errors
-      .map((aggregateError) => recurseException(aggregateError, parents))
-      .filter(Boolean)
-    setErrorProperty(error, 'errors', aggregateErrors)
-  } else if (isAggregateError(error)) {
-    setErrorProperty(error, 'errors', [])
-  } else if (error.errors !== undefined) {
-    // eslint-disable-next-line fp/no-delete
-    delete error.errors
-  }
-}
-
-// `AggregateError` is not available in Node <15.0.0 and in some browsers
-const isAggregateError = function (error) {
-  try {
-    return error instanceof AggregateError
-  } catch {
-    return false
   }
 }
