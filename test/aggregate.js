@@ -46,3 +46,10 @@ if (hasAggregateError()) {
     t.is(errorA.errors.length, 1)
   })
 }
+
+test('Fix invalid error.errors to non-AggregateError', (t) => {
+  const error = new Error('test')
+  error.errors = new Error('inner')
+  const errorA = normalizeException(error)
+  t.false('errors' in errorA)
+})
