@@ -3,10 +3,22 @@ import normalizeException from 'normalize-exception'
 import { each } from 'test-each'
 
 each(
-  // eslint-disable-next-line unicorn/no-null, no-magic-numbers
-  [undefined, null, true, 0, 0n, '', 'test', Symbol('test')],
+  [
+    undefined,
+    // eslint-disable-next-line unicorn/no-null
+    null,
+    true,
+    0,
+    // eslint-disable-next-line no-magic-numbers
+    0n,
+    '',
+    'test',
+    Symbol('test'),
+    Object.create({}),
+    new Set([]),
+  ],
   ({ title }, exception) => {
-    test(`Handle non-objects errors | ${title}`, (t) => {
+    test(`Handle non-plain-objects errors | ${title}`, (t) => {
       const error = normalizeException(exception)
       t.true(error instanceof Error)
       const message = String(exception)
