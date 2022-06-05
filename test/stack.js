@@ -22,7 +22,7 @@ test('New stack does not included internal code', (t) => {
 
 test.serial('New stack internal code removal with prepareStackTrace()', (t) => {
   // eslint-disable-next-line fp/no-mutation
-  Error.prepareStackTrace = () => 'test'
+  Error.prepareStackTrace = () => '\ntest'
   t.true(normalizeException().stack.includes('test'))
   // eslint-disable-next-line fp/no-delete
   delete Error.prepareStackTrace
