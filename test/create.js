@@ -49,6 +49,13 @@ test('Plain-objects errors can have names', (t) => {
   t.true(error instanceof Error)
 })
 
+test('Plain-objects errors can re-use native error types', (t) => {
+  const name = 'TypeError'
+  const error = normalizeException({ name })
+  t.is(error.name, name)
+  t.true(error instanceof TypeError)
+})
+
 test('Plain-objects errors can have messages', (t) => {
   const message = 'test'
   const error = normalizeException({ message })
@@ -102,4 +109,9 @@ test('Plain-objects errors can have aggregate errors', (t) => {
   const error = normalizeException({ errors })
   t.deepEqual(error.errors, errors)
   t.false(isEnum.call(error, 'errors'))
+})
+
+test('Plain-objects errors can have static properties', (t) => {
+  const error = normalizeException({ message: 'test', prop: true })
+  t.true(error.prop)
 })

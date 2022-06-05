@@ -1,3 +1,4 @@
+import { supportsAggregateError } from './aggregate.js'
 import { setErrorProperty } from './set.js'
 import { setFullStack } from './stack.js'
 
@@ -25,7 +26,13 @@ const objectifyError = function ({
   ...object
 }) {
   const messageA = getMessage(message, object)
-  const error = new Error(messageA)
+  const error = newError(name, messageA)
+
+  if (message === messageA) {
+    // eslint-disable-next-line fp/no-mutating-assign
+    Object.assign(error, object)
+  }
+
   Object.entries({ name, stack, cause, errors }).forEach(
     ([propName, propValue]) => {
       setNewErrorProperty(error, propName, propValue)
@@ -37,6 +44,28 @@ const objectifyError = function ({
   }
 
   return error
+}
+
+const newError = function (name, message) {
+  if (name === 'AggregateError' && supportsAggregateError()) {
+    return new AggregateError([], message)
+  }
+
+  if (name in NATIVE_ERRORS) {
+    return new NATIVE_ERRORS[name](message)
+  }
+
+  return new Error(message)
+}
+
+const NATIVE_ERRORS = {
+  Error,
+  ReferenceError,
+  TypeError,
+  SyntaxError,
+  RangeError,
+  URIError,
+  EvalError,
 }
 
 const getMessage = function (message, object) {

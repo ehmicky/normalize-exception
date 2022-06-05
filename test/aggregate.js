@@ -52,6 +52,28 @@ if (hasAggregateError()) {
     const errorA = normalizeException(error)
     t.is(errorA.errors.length, 1)
   })
+
+  test('Plain-objects errors remain the same', (t) => {
+    const innerError = new Error('inner')
+    const error = new AggregateError([innerError], 'test', {
+      cause: new Error('cause'),
+    })
+    error.prop = true
+    const { name, message, stack, cause, errors, ...props } = error
+    const errorObj = { ...props, name, message, stack, cause, errors }
+    const errorA = normalizeException(errorObj)
+    t.deepEqual(errorA, error)
+    t.true(stack.includes(errorA.stack))
+    t.is(errorA.cause, cause)
+    t.deepEqual(errorA.errors, errors)
+  })
+} else {
+  test('Plain-objects AggregateError work in older environments', (t) => {
+    const name = 'AggregateError'
+    const errorA = normalizeException({ name, message: 'test' })
+    t.is(errorA.name, name)
+    t.is(errorA.constructor, Error)
+  })
 }
 
 test('Normalize error.errors in non-AggregateError', (t) => {
