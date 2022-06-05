@@ -48,10 +48,13 @@ test.serial('Fix invalid error.name without constructor names', (t) => {
 test('Fix invalid error.stack with wrong name', (t) => {
   const error = new TypeError('test')
   const { stack } = error
-  error.stack = stack.replace('TypeError', 'Error')
+  const name = 'RangeError'
+  error.name = name
+  const lines = stack.split('\n')
+  const lastStackLine = lines[lines.length - 1]
   const errorA = normalizeException(error)
-  t.true(errorA.stack.startsWith('TypeError:'))
-  t.true(stack.includes(errorA.stack))
+  t.true(errorA.stack.includes(`${name}:`))
+  t.true(errorA.stack.endsWith(lastStackLine))
 })
 
 test('Handle infinite error.cause', (t) => {
