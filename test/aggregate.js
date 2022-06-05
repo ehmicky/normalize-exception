@@ -32,6 +32,13 @@ if (hasAggregateError()) {
     t.deepEqual(errorA.errors, [])
   })
 
+  test('Fix invalid error.errors to AggregateError', (t) => {
+    const error = new AggregateError([], 'test')
+    error.errors = new Error('test')
+    const errorA = normalizeException(error)
+    t.deepEqual(errorA.errors, [])
+  })
+
   test('Handle infinite error.errors', (t) => {
     const error = new AggregateError(['test'], 'test')
     error.errors[1] = error
