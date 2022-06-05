@@ -73,4 +73,4 @@ const isInternalStackLine = function (line) {
 // Since stack traces are implementation-specific, we must be very conservative
 // and careful. Also, we must ensure transpilation does not change this, nor
 // that the top function name changes.
-const NORMALIZE_ERROR_LINE = 'at normalizeException'
+const NORMALIZE_ERROR_LINE = 'normalizeException'
