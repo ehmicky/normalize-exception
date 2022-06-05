@@ -6,12 +6,12 @@
 
 Normalize exceptions/errors.
 
-JavaScript can `throw` any value including strings, objects
-(`{ message: "..." }`) or even `undefined`. This normalizes those exceptions to
-`Error` instances.
+In JavaScript, one can `throw` any value including strings, objects (like
+`{ message: "..." }`) or even `undefined`. This normalizes any exception
+[to an `Error` instance](#invalid-types).
 
-It also fixes any missing or invalid error properties: `name`, `message`,
-`stack`, `cause`, `errors`.
+It also fixes any missing or [invalid error properties](#invalid-properties):
+`name`, `message`, [`stack`](#invalid-stack), `cause`, `errors`.
 
 # Examples
 
@@ -81,6 +81,13 @@ not `require()`.
 
 `error` `any`\
 _Return value_: `Error`
+
+`normalizeException()` never throws.
+
+If `error` is an `Error` instance, it is returned. Any missing or invalid error
+property is directly modified.
+
+If it is not an `Error` instance, a new one is created and returned.
 
 # Support
 
