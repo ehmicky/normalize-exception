@@ -45,11 +45,11 @@ const normalizeMessage = function (error) {
 
 // Ensure `error.stack` exists and looks normal
 const normalizeStack = function (error) {
-  if (!isDefinedString(error.stack)) {
+  if (isDefinedString(error.stack)) {
+    fixStack(error)
+  } else {
     setFullStack(error)
   }
-
-  fixStack(error)
 }
 
 const isDefinedString = function (value) {
