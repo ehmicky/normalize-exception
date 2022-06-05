@@ -58,12 +58,19 @@ const isDefinedString = function (value) {
 
 // Recurse over `error.cause`.
 // Skip `error.cause` if infinitely recursive.
+// `new Error('message', { cause: undefined })` can happen either because:
+//  - the inner error was `undefined`
+//  - the cause was optional
+// We interpret in the second way, which might be more common.
 const normalizeCause = function (error, parents) {
-  if (error.cause === undefined) {
+  if (!('cause' in error)) {
     return
   }
 
-  const cause = recurseException(error.cause, parents)
+  const cause =
+    error.cause === undefined
+      ? error.cause
+      : recurseException(error.cause, parents)
 
   if (cause === undefined) {
     // eslint-disable-next-line fp/no-delete
