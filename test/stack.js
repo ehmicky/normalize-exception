@@ -28,6 +28,17 @@ test.serial('New stack internal code removal with prepareStackTrace()', (t) => {
   delete Error.prepareStackTrace
 })
 
+test.serial(
+  'New stack internal code removal with prepareStackTrace() empty',
+  (t) => {
+    // eslint-disable-next-line fp/no-mutation
+    Error.prepareStackTrace = () => ''
+    t.is(normalizeException().stack, 'Error: undefined')
+    // eslint-disable-next-line fp/no-delete
+    delete Error.prepareStackTrace
+  },
+)
+
 test.serial('New stack internal code removal with stackTraceLimit low', (t) => {
   const { stackTraceLimit } = Error
   // eslint-disable-next-line fp/no-mutation
