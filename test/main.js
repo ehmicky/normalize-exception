@@ -69,7 +69,7 @@ test('Normalize error.cause', (t) => {
   const error = new Error('test', { cause })
   const errorA = normalizeException(error)
   t.true(errorA.cause instanceof Error)
-  t.false(isEnum.call(error, 'cause'))
+  t.false(isEnum.call(errorA, 'cause'))
   t.is(errorA.cause.message, cause)
 })
 
@@ -90,10 +90,31 @@ test('Normalize error.errors', (t) => {
   const innerError = 'inner'
   const error = new AggregateError([innerError], 'test')
   const errorA = normalizeException(error)
-  t.false(isEnum.call(error, 'errors'))
+  t.false(isEnum.call(errorA, 'errors'))
   t.true(errorA.errors[0] instanceof Error)
   t.is(errorA.errors[0].message, innerError)
 })
+
+const hasAggregateError = function () {
+  try {
+    // eslint-disable-next-line no-unused-expressions
+    AggregateError
+    return true
+  } catch {
+    return false
+  }
+}
+
+if (hasAggregateError()) {
+  test('Add missing error.errors to AggregateError', (t) => {
+    const error = new AggregateError([], 'test')
+    // eslint-disable-next-line fp/no-delete
+    delete error.errors
+    t.false('errors' in error)
+    const errorA = normalizeException(error)
+    t.deepEqual(errorA.errors, [])
+  })
+}
 
 test('Handle infinite error.errors', (t) => {
   const error = new AggregateError(['test'], 'test')
