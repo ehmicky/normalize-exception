@@ -2,6 +2,8 @@ import test from 'ava'
 import normalizeException from 'normalize-exception'
 import { each } from 'test-each'
 
+const { propertyIsEnumerable: isEnum } = Object.prototype
+
 each(
   // eslint-disable-next-line unicorn/no-null, no-magic-numbers
   [undefined, null, true, 0, 0n, '', 'test', Symbol('test')],
@@ -12,6 +14,7 @@ each(
       const message = String(exception)
       t.is(error.message, message)
       t.is(typeof error.stack, 'string')
+      t.false(isEnum.call(error, 'stack'))
       t.true(error.stack.includes(`Error: ${message}`))
     })
   },
