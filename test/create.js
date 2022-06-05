@@ -56,6 +56,27 @@ test('Plain-objects errors can have messages', (t) => {
   t.false(isEnum.call(error, 'message'))
 })
 
+each(['', true], ({ title }, message) => {
+  test(`Plain-objects errors cannot have invalid messages | ${title}`, (t) => {
+    const error = normalizeException({ message })
+    t.is(error.message, '{}')
+  })
+})
+
+test('Plain-objects errors without messages are serialized', (t) => {
+  const exception = { prop: true }
+  const error = normalizeException(exception)
+  t.is(error.message, JSON.stringify(exception))
+})
+
+test('Plain-objects errors without messages are serialized even with recursion', (t) => {
+  const exception = { prop: true }
+  // eslint-disable-next-line fp/no-mutation
+  exception.self = exception
+  const error = normalizeException(exception)
+  t.is(error.message, 'prop, self')
+})
+
 test('Plain-objects errors can have stacks', (t) => {
   const message = 'test'
   const stack = `Error: ${message}\n  at here`
