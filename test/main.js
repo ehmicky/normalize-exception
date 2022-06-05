@@ -12,12 +12,19 @@ test('Normal errors are left as is', (t) => {
   t.is(errorA.toString(), errorString)
 })
 
-each([undefined, true, ''], ({ title }, name) => {
+each([undefined, true, ''], ({ title }, value) => {
   test(`Fix invalid error.name | ${title}`, (t) => {
     const error = new TypeError('test')
-    error.name = name
+    error.name = value
     t.is(normalizeException(error).name, 'TypeError')
     t.false(isEnum.call(error, 'name'))
+  })
+
+  test(`Fix invalid error.message | ${title}`, (t) => {
+    const error = new Error('test')
+    error.message = value
+    t.is(normalizeException(error).message, '')
+    t.false(isEnum.call(error, 'message'))
   })
 })
 
