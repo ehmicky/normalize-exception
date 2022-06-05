@@ -1,5 +1,8 @@
 import test from 'ava'
 import normalizeException from 'normalize-exception'
+import { each } from 'test-each'
+
+const { propertyIsEnumerable: isEnum } = Object.prototype
 
 test('Normal errors are left as is', (t) => {
   const error = new TypeError('test')
@@ -7,6 +10,15 @@ test('Normal errors are left as is', (t) => {
   const errorA = normalizeException(error)
   t.true(errorA instanceof TypeError)
   t.is(errorA.toString(), errorString)
+})
+
+each([undefined, true, ''], ({ title }, name) => {
+  test(`Fix invalid error.name | ${title}`, (t) => {
+    const error = new TypeError('test')
+    error.name = name
+    t.is(normalizeException(error).name, 'TypeError')
+    t.false(isEnum.call(error, 'name'))
+  })
 })
 
 test('Handle infinite error.cause', (t) => {
