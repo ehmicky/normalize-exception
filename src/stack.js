@@ -3,7 +3,7 @@ import { setErrorProperty } from './set.js'
 // Ensure `error.stack` reflects `error.name` and `error.message`
 // Also create stack trace if missing.
 export const setFullStack = function (error) {
-  const stack = `${getStackHeader(error)}\n${getStackTrace()}`
+  const stack = [getStackHeader(error), ...getStackTrace()].join('\n')
   setErrorProperty(error, 'stack', stack)
 }
 
@@ -16,7 +16,7 @@ export const getStackHeader = function (error) {
 export const fixStack = function (error, header) {
   const lines = error.stack.split('\n')
   const index = lines.findIndex(isStackLine)
-  const linesA = index === -1 ? [getStackTrace()] : lines.slice(index)
+  const linesA = index === -1 ? getStackTrace() : lines.slice(index)
   const stack = [header, ...linesA].join('\n')
   setErrorProperty(error, 'stack', stack)
 }
@@ -28,10 +28,13 @@ const isStackLine = function (line) {
 const STACK_LINE_REGEXP = /^\s*at /u
 
 // Generate a new stack trace
+// `error.stack` can be `undefined` in edge case, e.g. overridden `Error`
+// global object or deleting `Error.stackTraceLimit`.
 const getStackTrace = function () {
-  const lines = new Error(' ').stack.split('\n')
+  const { stack = '' } = new Error(' ')
+  const lines = stack === '' ? [] : stack.split('\n')
   const index = findInternalIndex(lines)
-  return lines.slice(index).join('\n')
+  return lines.slice(index)
 }
 
 // Remove stack lines due to this library itself.

@@ -45,3 +45,15 @@ test.serial('New stack internal code removal with stackTraceLimit 0', (t) => {
   // eslint-disable-next-line fp/no-mutation
   Error.stackTraceLimit = stackTraceLimit
 })
+
+test.serial(
+  'New stack internal code removal with stackTraceLimit undefined',
+  (t) => {
+    const { stackTraceLimit } = Error
+    // eslint-disable-next-line fp/no-delete
+    delete Error.stackTraceLimit
+    t.is(normalizeException().stack, 'Error: undefined')
+    // eslint-disable-next-line fp/no-mutation
+    Error.stackTraceLimit = stackTraceLimit
+  },
+)
