@@ -45,6 +45,15 @@ test.serial('Fix invalid error.name without constructor names', (t) => {
   Object.defineProperty(TypeError, 'name', { value: 'TypeError' })
 })
 
+test('Fix invalid error.stack with wrong name', (t) => {
+  const error = new TypeError('test')
+  const { stack } = error
+  error.stack = stack.replace('TypeError', 'Error')
+  const errorA = normalizeException(error)
+  t.true(errorA.stack.startsWith('TypeError:'))
+  t.true(stack.includes(errorA.stack))
+})
+
 test('Handle infinite error.cause', (t) => {
   const error = new Error('test')
   error.cause = error
