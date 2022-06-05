@@ -1,4 +1,5 @@
 import { normalizeAggregate } from './aggregate.js'
+import { normalizeCause } from './cause.js'
 import { createError } from './create.js'
 import { setErrorProperty } from './set.js'
 import { setFullStack, getStackHeader, fixStack } from './stack.js'
@@ -18,7 +19,7 @@ const recurseException = function (error, parents) {
   normalizeName(errorA)
   normalizeMessage(errorA)
   normalizeStack(errorA)
-  normalizeCause(errorA, parentsA)
+  normalizeCause(errorA, parentsA, recurseException)
   normalizeAggregate(errorA, parentsA, recurseException)
   return errorA
 }
@@ -55,28 +56,4 @@ const normalizeStack = function (error) {
 
 const isDefinedString = function (value) {
   return typeof value === 'string' && value !== ''
-}
-
-// Recurse over `error.cause`.
-// Skip `error.cause` if infinitely recursive.
-// `new Error('message', { cause: undefined })` can happen either because:
-//  - the inner error was `undefined`
-//  - the cause was optional
-// We interpret in the second way, which might be more common.
-const normalizeCause = function (error, parents) {
-  if (!('cause' in error)) {
-    return
-  }
-
-  const cause =
-    error.cause === undefined
-      ? error.cause
-      : recurseException(error.cause, parents)
-
-  if (cause === undefined) {
-    // eslint-disable-next-line fp/no-delete
-    delete error.cause
-  } else {
-    setErrorProperty(error, 'cause', cause)
-  }
 }
