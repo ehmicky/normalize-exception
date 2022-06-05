@@ -9,8 +9,10 @@ each(
     test(`Handle non-objects errors | ${title}`, (t) => {
       const error = normalizeException(exception)
       t.true(error instanceof Error)
-      t.is(error.message, String(exception))
+      const message = String(exception)
+      t.is(error.message, message)
       t.is(typeof error.stack, 'string')
+      t.true(error.stack.includes(`Error: ${message}`))
     })
   },
 )
