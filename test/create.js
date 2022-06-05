@@ -16,3 +16,15 @@ each(
     })
   },
 )
+
+test('Handle exceptions with invalid toString()', (t) => {
+  const exception = Object.create({
+    toString() {
+      throw new Error('test')
+    },
+  })
+  const error = normalizeException(exception)
+  t.true(error instanceof Error)
+  t.is(error.message, 'test')
+  t.true(error.stack.includes('toString'))
+})
