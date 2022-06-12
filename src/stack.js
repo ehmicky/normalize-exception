@@ -1,4 +1,4 @@
-import { setErrorProperty } from './set.js'
+import { setErrorProperty } from './enumerable.js'
 
 // Ensure `error.stack` reflects `error.name` and `error.message`
 // Also create stack trace if missing.

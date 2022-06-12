@@ -1,5 +1,5 @@
 import { supportsAggregateError } from './aggregate.js'
-import { setErrorProperty } from './set.js'
+import { setErrorProperty } from './enumerable.js'
 import { setFullStack } from './stack.js'
 
 // If an exception is not an Error instance, create one.
