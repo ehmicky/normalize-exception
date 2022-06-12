@@ -1,8 +1,7 @@
 import normalizeException from 'normalize-exception'
 import { expectType, expectError } from 'tsd'
 
-const error = new Error('test')
-expectType<Error>(normalizeException(error))
+expectType<Error>(normalizeException(new Error('test')))
 normalizeException(undefined)
 normalizeException('test')
 

@@ -43,4 +43,4 @@
  * console.log(normalizedError.cause) // Error: innerError
  * ```
  */
-export default function normalizeException(error: any): Error
+export default function normalizeException(error: unknown): Error
