@@ -26,7 +26,7 @@ test('Plain-objects with toString tag', (t) => {
     [Symbol.toStringTag]: 'Error',
     message: 'test',
   })
-  t.is(error.message, 'test')
+  t.is(error.message, '[object Error]')
   t.true(error instanceof Error)
 })
 

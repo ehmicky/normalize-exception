@@ -52,5 +52,8 @@
   },
   "engines": {
     "node": ">=14.18.0"
+  },
+  "dependencies": {
+    "is-plain-obj": "^4.1.0"
   }
 }

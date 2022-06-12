@@ -1,7 +1,8 @@
+import isPlainObj from 'is-plain-obj'
+
 import { supportsAggregateError } from './aggregate.js'
 import { setErrorProperty, isNonModifiableError } from './descriptors.js'
 import { setFullStack } from './stack.js'
-import { isPlainObj } from './utils.js'
 
 // If an exception is not an Error instance, create one.
 export const createError = function (value) {
@@ -22,9 +23,11 @@ export const createError = function (value) {
 
 // Unlike `instanceof Error`, this works cross-realm,
 // e.g. `vm.runInNewContext('Error')`
-// Edge causes `{ [Symbol.toStringTag]: 'Error' }` is handled by `is-plain-obj`
 const isError = function (value) {
-  return objectToString.call(value) === '[object Error]'
+  return (
+    objectToString.call(value) === '[object Error]' &&
+    !(Symbol.toStringTag in value)
+  )
 }
 
 const { toString: objectToString } = Object.prototype
