@@ -5,5 +5,6 @@ export const setErrorProperty = function (error, propName, value) {
     value,
     writable: true,
     enumerable: false,
+    configurable: true,
   })
 }
