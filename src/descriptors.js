@@ -25,10 +25,16 @@ const CORE_ERROR_PROPS = ['name', 'message', 'stack', 'cause', 'errors']
 const normalizeDescriptor = function (error, propName) {
   const descriptor = getDescriptor(error, propName)
 
-  if (
-    descriptor !== undefined &&
-    (descriptor.enumerable || !descriptor.writable)
-  ) {
+  if (descriptor === undefined) {
+    return
+  }
+
+  if (isReadonlyGetter(descriptor)) {
+    setErrorProperty(error, propName, error[propName])
+    return
+  }
+
+  if (isInvalidDescriptor(descriptor)) {
     setErrorDescriptor(error, propName, descriptor)
   }
 }
@@ -43,6 +49,15 @@ const getDescriptor = function (value, propName) {
 
   const prototype = Object.getPrototypeOf(value)
   return prototype === null ? undefined : getDescriptor(prototype, propName)
+}
+
+// Getters are allowed, but not readonly
+const isReadonlyGetter = function ({ get, set }) {
+  return get !== undefined && set === undefined
+}
+
+const isInvalidDescriptor = function ({ enumerable, writable }) {
+  return enumerable || !writable
 }
 
 // Error properties are writable and non-enumerable

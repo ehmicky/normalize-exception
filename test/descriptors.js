@@ -61,6 +61,7 @@ test('Handles non-enumerable getters', (t) => {
   // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(error, 'message', {
     get: getMessage,
+    set: setMessage,
     enumerable: true,
     configurable: true,
   })
@@ -75,6 +76,24 @@ test('Handles non-enumerable getters', (t) => {
   )
 })
 
+test('Handles readonly getters', (t) => {
+  const error = new Error('test')
+  // eslint-disable-next-line fp/no-mutating-methods
+  Object.defineProperty(error, 'message', {
+    get: getMessage,
+    enumerable: true,
+    configurable: true,
+  })
+  t.is(error.message, 'testTwo')
+  const normalizedError = normalizeException(error)
+  t.is(
+    Object.getOwnPropertyDescriptor(normalizedError, 'message').value,
+    'testTwo',
+  )
+})
+
 const getMessage = function () {
   return 'testTwo'
 }
+
+const setMessage = function () {}
