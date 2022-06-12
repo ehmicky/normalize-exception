@@ -1,7 +1,7 @@
 import { normalizeAggregate } from './aggregate.js'
 import { normalizeCause } from './cause.js'
 import { createError } from './create.js'
-import { setErrorProperty, normalizeEnumerableProps } from './descriptors.js'
+import { setErrorProperty, normalizeDescriptors } from './descriptors.js'
 import { setFullStack, fixStack } from './stack.js'
 
 // Ensure an exception is an Error instance with normal properties
@@ -28,7 +28,7 @@ const normalizeProps = function (error, recurse) {
   normalizeStack(error)
   normalizeCause(error, recurse)
   normalizeAggregate(error, recurse)
-  normalizeEnumerableProps(error)
+  normalizeDescriptors(error)
 }
 
 // Ensure `error.name` is a string

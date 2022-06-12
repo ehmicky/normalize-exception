@@ -13,16 +13,16 @@ const isNonConfigurableProp = function (error, propName) {
   return descriptor !== undefined && !descriptor.configurable
 }
 
-// Ensure error properties are non-enumerable
-export const normalizeEnumerableProps = function (error) {
+// Ensure error properties are writable and non-enumerable
+export const normalizeDescriptors = function (error) {
   CORE_ERROR_PROPS.forEach((propName) => {
-    normalizeEnumerableProp(error, propName)
+    normalizeDescriptor(error, propName)
   })
 }
 
 const CORE_ERROR_PROPS = ['name', 'message', 'stack', 'cause', 'errors']
 
-const normalizeEnumerableProp = function (error, propName) {
+const normalizeDescriptor = function (error, propName) {
   const descriptor = getDescriptor(error, propName)
 
   if (
