@@ -13,18 +13,26 @@ each(
     { propName: 'cause', value: new Error('test') },
     { propName: 'errors', value: [] },
   ],
-  ({ title }, { propName, value }) => {
-    test(`Fix non-enumerable properties | ${title}`, (t) => {
+  [
+    { writable: true, enumerable: false, configurable: true },
+    { writable: false, enumerable: false, configurable: true },
+    { writable: true, enumerable: true, configurable: true },
+    { writable: true, enumerable: false, configurable: false },
+    { writable: false, enumerable: true, configurable: false },
+  ],
+  ({ title }, { propName, value }, descriptor) => {
+    test(`Fix invalid descriptors | ${title}`, (t) => {
       const error = new Error('test')
       // eslint-disable-next-line fp/no-mutating-methods
-      Object.defineProperty(error, propName, {
-        value,
+      Object.defineProperty(error, propName, { ...descriptor, value })
+      const errorA = normalizeException(error)
+      const descriptorA = Object.getOwnPropertyDescriptor(errorA, propName)
+      t.deepEqual(descriptorA, {
+        value: descriptorA.value,
         writable: true,
-        enumerable: true,
+        enumerable: false,
         configurable: true,
       })
-      t.true(isEnum.call(error, propName))
-      t.false(isEnum.call(normalizeException(error), propName))
     })
   },
 )
@@ -43,32 +51,7 @@ test('Handles non-enumerable inherited error properties', (t) => {
   const error = new TestError('test')
   t.false(hasOwn.call(error, 'name'))
   t.true(isEnum.call(Object.getPrototypeOf(error), 'name'))
-  t.true(hasOwn.call(normalizeException(error), 'name'))
-  t.false(isEnum.call(normalizeException(error), 'name'))
-})
-
-test('Handles non-enumerable non-configurable error properties', (t) => {
-  const error = new Error('test')
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'message', {
-    value: error.message,
-    writable: true,
-    enumerable: true,
-    configurable: false,
-  })
-  t.true(isEnum.call(error, 'message'))
-  t.true(isEnum.call(normalizeException(error), 'message'))
-})
-
-test('Handles non-enumerable non-writable error properties', (t) => {
-  const error = new Error('test')
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'message', {
-    value: error.message,
-    writable: false,
-    enumerable: true,
-    configurable: true,
-  })
-  t.true(isEnum.call(error, 'message'))
-  t.false(isEnum.call(normalizeException(error), 'message'))
+  const normalizedError = normalizeException(error)
+  t.true(hasOwn.call(normalizedError, 'name'))
+  t.false(isEnum.call(normalizedError, 'name'))
 })

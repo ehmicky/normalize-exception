@@ -1,5 +1,5 @@
 import { supportsAggregateError } from './aggregate.js'
-import { setErrorProperty } from './enumerable.js'
+import { setErrorProperty, isNonModifiableError } from './enumerable.js'
 import { setFullStack } from './stack.js'
 import { isPlainObj } from './utils.js'
 
@@ -13,7 +13,7 @@ export const createError = function (value) {
     return stringifyError(value)
   }
 
-  if (!Object.isExtensible(value)) {
+  if (isNonModifiableError(value)) {
     return objectifyError(value)
   }
 
