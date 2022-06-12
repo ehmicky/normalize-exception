@@ -17,7 +17,7 @@ const recurseException = function (error, parents) {
   const recurse = (innerError) =>
     recurseException(innerError, [...parents, error])
 
-  const errorA = error instanceof Error ? error : createError(error)
+  const errorA = createError(error)
   normalizeProps(errorA, recurse)
   return errorA
 }

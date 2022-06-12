@@ -25,7 +25,10 @@ const isDefined = function (error) {
 }
 
 const isAggregateError = function (error) {
-  return supportsAggregateError() && error instanceof AggregateError
+  return (
+    supportsAggregateError() &&
+    (error.name === 'AggregateError' || error instanceof AggregateError)
+  )
 }
 
 // `AggregateError` is not available in Node <15.0.0 and in some browsers

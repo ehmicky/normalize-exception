@@ -1,3 +1,5 @@
+import { runInNewContext } from 'vm'
+
 import test from 'ava'
 import normalizeException from 'normalize-exception'
 import { each } from 'test-each'
@@ -10,6 +12,14 @@ test('Normal errors are left as is', (t) => {
   const errorA = normalizeException(error)
   t.true(errorA instanceof TypeError)
   t.is(errorA.toString(), errorString)
+})
+
+test('Cross-realm errors are left as is', (t) => {
+  const CrossTypeError = runInNewContext('TypeError')
+  const error = new CrossTypeError('test')
+  const errorA = normalizeException(error)
+  t.is(errorA, error)
+  t.true(errorA instanceof CrossTypeError)
 })
 
 each([undefined, true, ''], ({ title }, value) => {

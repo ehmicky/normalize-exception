@@ -1,3 +1,5 @@
+import { runInNewContext } from 'vm'
+
 import test from 'ava'
 import normalizeException from 'normalize-exception'
 
@@ -30,6 +32,14 @@ if (hasAggregateError()) {
     t.false('errors' in error)
     const errorA = normalizeException(error)
     t.deepEqual(errorA.errors, [])
+  })
+
+  test('Add missing error.errors to AggregateError in different realms', (t) => {
+    const CustomAggregateError = runInNewContext('AggregateError')
+    const error = new CustomAggregateError([], 'test')
+    // eslint-disable-next-line fp/no-delete
+    delete error.errors
+    t.deepEqual(normalizeException(error).errors, [])
   })
 
   test('Fix invalid error.errors to AggregateError', (t) => {

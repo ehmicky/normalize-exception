@@ -1,3 +1,5 @@
+import { runInNewContext } from 'vm'
+
 import test from 'ava'
 import normalizeException from 'normalize-exception'
 import { each } from 'test-each'
@@ -9,6 +11,22 @@ test('Plain-objects errors can have names', (t) => {
   const error = normalizeException({ name })
   t.is(error.name, name)
   t.false(isEnum.call(error, 'name'))
+  t.true(error instanceof Error)
+})
+
+test('Plain-objects errors work cross-realm', (t) => {
+  const props = runInNewContext('({ name: "test" })')
+  const error = normalizeException(props)
+  t.is(error.name, 'test')
+  t.true(error instanceof Error)
+})
+
+test('Plain-objects with toString tag', (t) => {
+  const error = normalizeException({
+    [Symbol.toStringTag]: 'Error',
+    message: 'test',
+  })
+  t.is(error.message, 'test')
   t.true(error instanceof Error)
 })
 

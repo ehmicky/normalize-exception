@@ -1,20 +1,29 @@
 import { supportsAggregateError } from './aggregate.js'
 import { setErrorProperty } from './enumerable.js'
 import { setFullStack } from './stack.js'
+import { isPlainObj } from './utils.js'
 
 // If an exception is not an Error instance, create one.
 export const createError = function (value) {
-  return isPlainObj(value) ? objectifyError(value) : stringifyError(value)
-}
-
-const isPlainObj = function (value) {
-  if (typeof value !== 'object' || value === null) {
-    return false
+  if (isPlainObj(value)) {
+    return objectifyError(value)
   }
 
-  const prototype = Object.getPrototypeOf(value)
-  return prototype === Object.prototype || prototype === null
+  if (isError(value)) {
+    return value
+  }
+
+  return stringifyError(value)
 }
+
+// Unlike `instanceof Error`, this works cross-realm,
+// e.g. `vm.runInNewContext('Error')`
+// Edge causes `{ [Symbol.toStringTag]: 'Error' }` is handled by `is-plain-obj`
+const isError = function (value) {
+  return objectToString.call(value) === '[object Error]'
+}
+
+const { toString: objectToString } = Object.prototype
 
 // Handle errors that are plain objects instead of Error instances
 const objectifyError = function ({
