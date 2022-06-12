@@ -38,3 +38,13 @@ test('Handle exceptions with invalid toString()', (t) => {
   t.is(error.message, 'test')
   t.true(error.stack.includes('toString'))
 })
+
+test('Handle unextensible errors', (t) => {
+  const error = new TypeError('test')
+  // eslint-disable-next-line fp/no-delete
+  delete error.message
+  Object.preventExtensions(error)
+  const errorA = normalizeException(error)
+  t.true(errorA instanceof TypeError)
+  t.is(error.message, '')
+})

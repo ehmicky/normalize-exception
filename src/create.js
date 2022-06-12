@@ -10,7 +10,7 @@ export const createError = function (value) {
   }
 
   if (isError(value)) {
-    return value
+    return Object.isExtensible(value) ? value : objectifyError(value)
   }
 
   return stringifyError(value)
