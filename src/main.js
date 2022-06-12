@@ -1,7 +1,7 @@
 import { normalizeAggregate } from './aggregate.js'
 import { normalizeCause } from './cause.js'
 import { createError } from './create.js'
-import { setErrorProperty } from './set.js'
+import { setErrorProperty, normalizeEnumerableProps } from './set.js'
 import { setFullStack, fixStack } from './stack.js'
 
 // Ensure an exception is an Error instance with normal properties
@@ -18,12 +18,17 @@ const recurseException = function (error, parents) {
     recurseException(innerError, [...parents, error])
 
   const errorA = error instanceof Error ? error : createError(error)
-  normalizeName(errorA)
-  normalizeMessage(errorA)
-  normalizeStack(errorA)
-  normalizeCause(errorA, recurse)
-  normalizeAggregate(errorA, recurse)
+  normalizeProps(errorA, recurse)
   return errorA
+}
+
+const normalizeProps = function (error, recurse) {
+  normalizeName(error)
+  normalizeMessage(error)
+  normalizeStack(error)
+  normalizeCause(error, recurse)
+  normalizeAggregate(error, recurse)
+  normalizeEnumerableProps(error)
 }
 
 // Ensure `error.name` is a string
