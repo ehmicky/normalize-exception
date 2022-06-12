@@ -38,7 +38,7 @@ each(
 )
 
 test('Handles non-enumerable inherited error properties', (t) => {
-  // eslint-disable-next-line unicorn/custom-error-definition, fp/no-class
+  // eslint-disable-next-line fp/no-class
   class TestError extends Error {}
   // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(TestError.prototype, 'name', {
