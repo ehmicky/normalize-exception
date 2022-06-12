@@ -1,5 +1,5 @@
 import { supportsAggregateError } from './aggregate.js'
-import { setErrorProperty, isNonModifiableError } from './enumerable.js'
+import { setErrorProperty, isNonModifiableError } from './descriptors.js'
 import { setFullStack } from './stack.js'
 import { isPlainObj } from './utils.js'
 

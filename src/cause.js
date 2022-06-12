@@ -1,4 +1,4 @@
-import { setErrorProperty } from './enumerable.js'
+import { setErrorProperty } from './descriptors.js'
 
 // Recurse over `error.cause`.
 // Skip `error.cause` if infinitely recursive.
