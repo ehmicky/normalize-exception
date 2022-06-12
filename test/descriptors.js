@@ -55,3 +55,26 @@ test('Handles non-enumerable inherited error properties', (t) => {
   t.true(hasOwn.call(normalizedError, 'name'))
   t.false(isEnum.call(normalizedError, 'name'))
 })
+
+test('Handles non-enumerable getters', (t) => {
+  const error = new Error('test')
+  // eslint-disable-next-line fp/no-mutating-methods
+  Object.defineProperty(error, 'message', {
+    get: getMessage,
+    enumerable: true,
+    configurable: true,
+  })
+  t.is(error.message, 'testTwo')
+  t.true(isEnum.call(error, 'message'))
+  const normalizedError = normalizeException(error)
+  t.is(normalizedError.message, 'testTwo')
+  t.false(isEnum.call(normalizedError, 'message'))
+  t.is(
+    Object.getOwnPropertyDescriptor(normalizedError, 'message').get,
+    getMessage,
+  )
+})
+
+const getMessage = function () {
+  return 'testTwo'
+}

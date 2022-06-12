@@ -55,7 +55,7 @@ const setErrorDescriptor = function (error, propName, descriptor) {
   // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(error, propName, {
     ...descriptor,
-    writable: true,
+    ...('get' in descriptor || 'set' in descriptor ? {} : { writable: true }),
     enumerable: false,
     configurable: true,
   })
