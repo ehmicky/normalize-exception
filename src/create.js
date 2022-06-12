@@ -9,11 +9,15 @@ export const createError = function (value) {
     return objectifyError(value)
   }
 
-  if (isError(value)) {
-    return Object.isExtensible(value) ? value : objectifyError(value)
+  if (!isError(value)) {
+    return stringifyError(value)
   }
 
-  return stringifyError(value)
+  if (!Object.isExtensible(value)) {
+    return objectifyError(value)
+  }
+
+  return value
 }
 
 // Unlike `instanceof Error`, this works cross-realm,
