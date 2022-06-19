@@ -13,7 +13,7 @@ export const createError = function (value) {
     return stringifyError(value)
   }
 
-  if (isNonModifiableError(value)) {
+  if (isInvalidError(value)) {
     return objectifyError(value)
   }
 
@@ -31,6 +31,20 @@ const isError = function (value) {
 
 const { toString: objectToString } = Object.prototype
 
+const isInvalidError = function (value) {
+  return isNonModifiableError(value) || hasInvalidConstructor(value)
+}
+
+// `error.constructor.name` is often used for type checking, so we ensure it
+// is normal
+const hasInvalidConstructor = function (error) {
+  return (
+    typeof error.constructor !== 'function' ||
+    typeof error.constructor.name !== 'string' ||
+    error.constructor.name === ''
+  )
+}
+
 // Handle errors that are plain objects instead of Error instances
 const objectifyError = function ({
   name,
@@ -44,8 +58,7 @@ const objectifyError = function ({
   const error = newError(name, messageA)
 
   if (message === messageA) {
-    // eslint-disable-next-line fp/no-mutating-assign
-    Object.assign(error, object)
+    assignObjectProps(error, object)
   }
 
   Object.entries({ name, stack, cause, errors }).forEach(
@@ -59,6 +72,33 @@ const objectifyError = function ({
   }
 
   return error
+}
+
+// We ensure prototype properties are not overridden
+const assignObjectProps = function (error, object) {
+  // eslint-disable-next-line fp/no-loops
+  for (const propName in object) {
+    // eslint-disable-next-line max-depth
+    if (!(propName in error)) {
+      error[propName] = object[propName]
+    }
+  }
+}
+
+const getMessage = function (message, object) {
+  return typeof message === 'string' && message !== ''
+    ? message
+    : jsonStringify(object)
+}
+
+// If no `message` property is defined, stringify the object.
+// This might throw on self references.
+const jsonStringify = function (object) {
+  try {
+    return JSON.stringify(object)
+  } catch {
+    return Object.keys(object).join(', ')
+  }
 }
 
 const newError = function (name, message) {
@@ -81,22 +121,6 @@ const NATIVE_ERRORS = {
   RangeError,
   URIError,
   EvalError,
-}
-
-const getMessage = function (message, object) {
-  return typeof message === 'string' && message !== ''
-    ? message
-    : jsonStringify(object)
-}
-
-// If no `message` property is defined, stringify the object.
-// This might throw on self references.
-const jsonStringify = function (object) {
-  try {
-    return JSON.stringify(object)
-  } catch {
-    return Object.keys(object).join(', ')
-  }
 }
 
 const setNewErrorProperty = function (error, propName, propValue) {

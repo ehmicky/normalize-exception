@@ -30,6 +30,26 @@ test('Plain-objects with toString tag', (t) => {
   t.true(error instanceof Error)
 })
 
+const constructorWithoutName = function () {}
+// eslint-disable-next-line fp/no-mutating-methods
+Object.defineProperty(constructorWithoutName, 'name', { value: false })
+const constructorWithEmptyName = function () {}
+// eslint-disable-next-line fp/no-mutating-methods
+Object.defineProperty(constructorWithEmptyName, 'name', { value: '' })
+each(
+  ['', constructorWithoutName, constructorWithEmptyName],
+  ({ title }, errorConstructor) => {
+    test(`Plain-objects with errors with wrong constructor | ${title}`, (t) => {
+      const message = 'test'
+      const error = new Error(message)
+      error.constructor = errorConstructor
+      const errorA = normalizeException(error)
+      t.is(errorA.message, message)
+      t.is(errorA.constructor, Error)
+    })
+  },
+)
+
 test('Plain-objects errors can re-use native error types', (t) => {
   const name = 'TypeError'
   const error = normalizeException({ name })
