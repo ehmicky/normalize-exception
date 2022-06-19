@@ -89,6 +89,17 @@ property is directly modified.
 
 If it is not an `Error` instance, a new one is created and returned.
 
+# Related projects
+
+- [`modern-errors`](https://github.com/ehmicky/modern-errors): Handle errors
+  like it's 2022 🔮
+- [`error-type`](https://github.com/ehmicky/error-type): Create custom error
+  types
+- [`merge-error-cause`](https://github.com/ehmicky/merge-error-cause): Merge an
+  error with its `cause`
+- [`error-cause-polyfill`](https://github.com/ehmicky/error-cause-polyfill):
+  Polyfill `error.cause`
+
 # Support
 
 For any question, _don't hesitate_ to [submit an issue on GitHub](../../issues).
