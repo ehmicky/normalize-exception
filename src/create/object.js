@@ -30,17 +30,6 @@ export const objectifyError = function ({
   return error
 }
 
-// We ensure prototype properties are not overridden
-const assignObjectProps = function (error, object) {
-  // eslint-disable-next-line fp/no-loops
-  for (const propName in object) {
-    // eslint-disable-next-line max-depth
-    if (!(propName in error)) {
-      error[propName] = object[propName]
-    }
-  }
-}
-
 const getMessage = function (message, object) {
   return typeof message === 'string' && message !== ''
     ? message
@@ -77,6 +66,17 @@ const NATIVE_ERRORS = {
   RangeError,
   URIError,
   EvalError,
+}
+
+// We ensure prototype properties are not overridden
+const assignObjectProps = function (error, object) {
+  // eslint-disable-next-line fp/no-loops
+  for (const propName in object) {
+    // eslint-disable-next-line max-depth
+    if (!(propName in error)) {
+      error[propName] = object[propName]
+    }
+  }
 }
 
 const setNewErrorProperty = function (error, propName, propValue) {
