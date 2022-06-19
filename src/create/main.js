@@ -1,7 +1,7 @@
 import isPlainObj from 'is-plain-obj'
 
-import { setErrorProperty, isNonModifiableError } from './descriptors.js'
-import { setFullStack } from './stack.js'
+import { setErrorProperty, isNonModifiableError } from '../descriptors.js'
+import { setFullStack } from '../stack.js'
 
 // If an exception is not an Error instance, create one.
 export const createError = function (value) {

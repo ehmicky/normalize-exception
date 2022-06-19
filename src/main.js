@@ -1,6 +1,6 @@
 import { normalizeAggregate } from './aggregate.js'
 import { normalizeCause } from './cause.js'
-import { createError } from './create.js'
+import { createError } from './create/main.js'
 import { setErrorProperty, normalizeDescriptors } from './descriptors.js'
 import { setFullStack, fixStack } from './stack.js'
 
