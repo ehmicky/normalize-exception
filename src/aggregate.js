@@ -26,18 +26,7 @@ const isDefined = function (error) {
 
 const isAggregateError = function (error) {
   return (
-    supportsAggregateError() &&
+    'AggregateError' in globalThis &&
     (error.name === 'AggregateError' || error instanceof AggregateError)
   )
-}
-
-// `AggregateError` is not available in Node <15.0.0 and in some browsers
-export const supportsAggregateError = function () {
-  try {
-    // eslint-disable-next-line no-unused-expressions
-    AggregateError
-    return true
-  } catch {
-    return false
-  }
 }

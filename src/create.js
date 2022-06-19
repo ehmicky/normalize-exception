@@ -1,6 +1,5 @@
 import isPlainObj from 'is-plain-obj'
 
-import { supportsAggregateError } from './aggregate.js'
 import { setErrorProperty, isNonModifiableError } from './descriptors.js'
 import { setFullStack } from './stack.js'
 
@@ -63,7 +62,7 @@ const objectifyError = function ({
 }
 
 const newError = function (name, message) {
-  if (name === 'AggregateError' && supportsAggregateError()) {
+  if (name === 'AggregateError' && 'AggregateError' in globalThis) {
     return new AggregateError([], message)
   }
 

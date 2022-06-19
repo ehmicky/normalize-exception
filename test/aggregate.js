@@ -5,17 +5,7 @@ import normalizeException from 'normalize-exception'
 
 const { propertyIsEnumerable: isEnum } = Object.prototype
 
-const hasAggregateError = function () {
-  try {
-    // eslint-disable-next-line no-unused-expressions
-    AggregateError
-    return true
-  } catch {
-    return false
-  }
-}
-
-if (hasAggregateError()) {
+if ('AggregateError' in globalThis) {
   test('Normalize error.errors in AggregateError', (t) => {
     const innerError = 'inner'
     const error = new AggregateError([innerError], 'test')
