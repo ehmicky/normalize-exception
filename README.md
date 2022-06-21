@@ -1,5 +1,4 @@
 [![Codecov](https://img.shields.io/codecov/c/github/ehmicky/normalize-exception.svg?label=tested&logo=codecov)](https://codecov.io/gh/ehmicky/normalize-exception)
-[![Build](https://github.com/ehmicky/normalize-exception/workflows/Build/badge.svg)](https://github.com/ehmicky/normalize-exception/actions)
 [![Node](https://img.shields.io/node/v/normalize-exception.svg?logo=node.js)](https://www.npmjs.com/package/normalize-exception)
 [![Twitter](https://img.shields.io/badge/%E2%80%8B-twitter-4cc61e.svg?logo=twitter)](https://twitter.com/intent/follow?screen_name=ehmicky)
 [![Medium](https://img.shields.io/badge/%E2%80%8B-medium-4cc61e.svg?logo=medium)](https://medium.com/@ehmicky)
