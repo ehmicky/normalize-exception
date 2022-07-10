@@ -11,13 +11,28 @@ Normalize exceptions/errors.
 This fixes the following problems:
 
 - Exceptions that are [not `Error` instances](#invalid-types)
-- [Missing or invalid error properties](#invalid-properties): `name`, `message`,
+- [Missing](#missing-properties) or
+  [invalid error properties](#invalid-properties): `name`, `message`,
   [`stack`](#invalid-stack), `cause`, `errors`.
 - Error properties that are [unsafe getters](#unsafe-getters)
 
 # Examples
 
 ## Invalid types
+
+### Strings
+
+```js
+console.log(normalizeException('message')) // Error: message
+```
+
+### Plain objects
+
+```js
+console.log(normalizeException({ name: 'TypeError', message: 'message' })) // TypeError: message
+```
+
+### Others
 
 <!-- eslint-disable unicorn/no-null, no-throw-literal -->
 
@@ -34,12 +49,37 @@ try {
 }
 ```
 
-```js
-console.log(normalizeException('message')) // Error: message
-```
+## Missing properties
+
+<!-- eslint-disable fp/no-delete -->
 
 ```js
-console.log(normalizeException({ name: 'TypeError', message: 'message' })) // TypeError: message
+const error = new TypeError('message')
+delete error.name
+console.log(error.name) // undefined
+console.log(normalizeException(error).name) // 'TypeError'
+```
+
+## Invalid properties
+
+```js
+const error = new Error('message', { cause: 'innerError' })
+console.log(error.cause instanceof Error) // false
+
+const normalizedError = normalizeException(error)
+console.log(normalizedError.cause instanceof Error) // true
+console.log(normalizedError.cause) // Error: innerError
+```
+
+## Missing stack
+
+<!-- eslint-disable fp/no-delete -->
+
+```js
+const error = new Error('message')
+delete error.stack
+console.log(error.stack) // undefined
+console.log(normalizeException(error).stack) // 'Error: message ...'
 ```
 
 ## Invalid stack
@@ -54,17 +94,6 @@ console.log(error.stack) // TypeError: message
 
 const normalizedError = normalizeException(error)
 console.log(normalizedError.stack) // TypeError: message otherMessage
-```
-
-## Invalid properties
-
-```js
-const error = new Error('message', { cause: 'innerError' })
-console.log(error.cause instanceof Error) // false
-
-const normalizedError = normalizeException(error)
-console.log(normalizedError.cause instanceof Error) // true
-console.log(normalizedError.cause) // Error: innerError
 ```
 
 ## Unsafe getters
