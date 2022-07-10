@@ -8,7 +8,7 @@ const { toString: objectToString } = Object.prototype
 
 // If an exception is not an Error instance, create one.
 export const createError = function (value) {
-  if (isPlainObj(value)) {
+  if (isErrorPlainObj(value)) {
     return objectifyError(value)
   }
 
@@ -23,9 +23,18 @@ export const createError = function (value) {
   return value
 }
 
+// Handle hooks exceptions when `value` is a Proxy.
+const isErrorPlainObj = function (value) {
+  try {
+    return isPlainObj(value)
+  } catch {
+    return false
+  }
+}
+
 // Unlike `instanceof Error`, this works cross-realm,
-// e.g. `vm.runInNewContext('Error')`
-// Handle hooks exceptions when `value` is a Proxy
+// e.g. `vm.runInNewContext('Error')`.
+// Handle hooks exceptions when `value` is a Proxy.
 const isError = function (value) {
   try {
     return (
@@ -44,8 +53,13 @@ const handleNonError = function (value) {
 // Proxies of Errors are converted to non-proxies.
 // This can only work within the same realm, because the only way to detect
 // proxies is combining `Object.prototype.toString()` and `instanceof`.
+// Handle hooks exceptions when `value` is a Proxy.
 const isProxy = function (value) {
-  return value instanceof Error
+  try {
+    return value instanceof Error
+  } catch {
+    return true
+  }
 }
 
 const isInvalidError = function (value) {

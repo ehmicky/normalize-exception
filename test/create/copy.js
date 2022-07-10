@@ -1,5 +1,6 @@
 import test from 'ava'
 import normalizeException from 'normalize-exception'
+import { each } from 'test-each'
 
 const setInvalidProp = function (propName) {
   // eslint-disable-next-line fp/no-mutating-methods
@@ -47,12 +48,31 @@ const invalidProxyHook = function () {
   throw new Error('proxyError')
 }
 
-test('Handle throwing Proxy.get', (t) => {
-  const error = new Error('test')
-  // eslint-disable-next-line fp/no-proxy
-  const proxy = new Proxy(error, { get: invalidProxyHook })
-  t.is(normalizeException(proxy).message, '{}')
-})
+each(
+  [
+    'set',
+    'get',
+    'deleteProperty',
+    'has',
+    'ownKeys',
+    'defineProperty',
+    'getOwnPropertyDescriptor',
+    'isExtensible',
+    'preventExtensions',
+    'getPrototypeOf',
+    'setPrototypeOf',
+    'apply',
+    'construct',
+  ],
+  ({ title }, hook) => {
+    test(`Handle throwing Proxy.get | ${title}`, (t) => {
+      const error = new Error('test')
+      // eslint-disable-next-line fp/no-proxy
+      const proxy = new Proxy(error, { [hook]: invalidProxyHook })
+      t.is(typeof normalizeException(proxy).message, 'string')
+    })
+  },
+)
 
 test('Plain-objects errors ignore non-enumerable static properties', (t) => {
   t.is(

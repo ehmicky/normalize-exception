@@ -35,16 +35,34 @@ export const copyObject = function (object) {
 // `error.name` is often inherited.
 // Exclude non-enumerable properties except for core error properties.
 const getPropsToCopy = function (object) {
-  const propNames = Reflect.ownKeys(object)
+  const propNames = getOwnKeys(object)
 
   // eslint-disable-next-line fp/no-loops
   for (const propName of CORE_ERROR_PROPS) {
     // eslint-disable-next-line max-depth
-    if (propName in object && !hasOwn.call(object, propName)) {
+    if (isInheritedProp(object, propName)) {
       // eslint-disable-next-line fp/no-mutating-methods
       propNames.push(propName)
     }
   }
 
   return propNames
+}
+
+// Handle hooks exceptions when `value` is a Proxy.
+const getOwnKeys = function (object) {
+  try {
+    return Reflect.ownKeys(object)
+  } catch {
+    return []
+  }
+}
+
+// Handle hooks exceptions when `value` is a Proxy.
+const isInheritedProp = function (object, propName) {
+  try {
+    return propName in object && !hasOwn.call(object, propName)
+  } catch {
+    return false
+  }
 }
