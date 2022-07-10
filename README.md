@@ -32,6 +32,7 @@ try {
 } catch (error) {
   console.log(error) // 'message'
   console.log(normalizeException(error)) // Error: message
+  console.log(error instanceof Error) // true
 }
 ```
 
@@ -91,9 +92,7 @@ console.log(error.stack) // TypeError: message
 // `error.stack` is cached, so it does not update
 error.message += ' otherMessage'
 console.log(error.stack) // TypeError: message
-
-const normalizedError = normalizeException(error)
-console.log(normalizedError.stack) // TypeError: message otherMessage
+console.log(normalizeException(error).stack) // TypeError: message otherMessage
 ```
 
 ## Unsafe getters
