@@ -49,24 +49,49 @@ test('Handle throwing getters on name on plain objects', (t) => {
 })
 
 test('Plain-objects errors ignore non-enumerable static properties', (t) => {
-  const error = normalizeException(
-    // eslint-disable-next-line fp/no-mutating-methods
-    Object.defineProperty({ message: 'test' }, 'prop', {
-      value: true,
-      enumerable: false,
-    }),
+  t.is(
+    normalizeException(
+      // eslint-disable-next-line fp/no-mutating-methods
+      Object.defineProperty({ message: 'test' }, 'prop', {
+        value: true,
+        enumerable: false,
+      }),
+    ).prop,
+    undefined,
   )
-  t.is(error.prop, undefined)
 })
 
 test('Plain-objects errors do not ignore non-enumerable core properties', (t) => {
   const name = 'TypeError'
-  const error = normalizeException(
-    // eslint-disable-next-line fp/no-mutating-methods
-    Object.defineProperty({ message: 'test' }, 'name', {
-      value: name,
-      enumerable: false,
-    }),
+  t.is(
+    normalizeException(
+      // eslint-disable-next-line fp/no-mutating-methods
+      Object.defineProperty({ message: 'test' }, 'name', {
+        value: name,
+        enumerable: false,
+      }),
+    ).name,
+    name,
   )
-  t.is(error.name, name)
+})
+
+// eslint-disable-next-line fp/no-class
+class ChildError extends Error {}
+// eslint-disable-next-line fp/no-mutating-methods
+Object.defineProperty(ChildError.prototype, 'name', { value: ChildError.name })
+// eslint-disable-next-line fp/no-mutating-methods
+Object.defineProperty(ChildError.prototype, 'prop', { value: true })
+
+test('Plain-objects errors ignore inherited static properties', (t) => {
+  const error = new ChildError()
+  error.constructor = undefined
+  t.is(error.prop, true)
+  t.is(normalizeException(error).prop, undefined)
+})
+
+test('Plain-objects errors do not ignore inherited core properties', (t) => {
+  const error = new ChildError()
+  error.constructor = undefined
+  t.is(error.name, 'ChildError')
+  t.is(normalizeException(error).name, 'ChildError')
 })
