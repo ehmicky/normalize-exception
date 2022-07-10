@@ -1,7 +1,6 @@
 import isPlainObj from 'is-plain-obj'
 
-import { isNonModifiableError } from '../descriptors.js'
-
+import { isNonModifiableError } from './modifiable.js'
 import { objectifyError } from './object.js'
 import { stringifyError } from './string.js'
 

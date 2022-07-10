@@ -1,18 +1,3 @@
-// If error cannot be modified, make it modifiable by cloning it
-export const isNonModifiableError = function (error) {
-  return (
-    !Object.isExtensible(error) ||
-    CORE_ERROR_PROPS.some((propName) => isNonConfigurableProp(error, propName))
-  )
-}
-
-// Inherited properties are always configurable: using `Object.defineProperty()`
-// creates an own property instead.
-const isNonConfigurableProp = function (error, propName) {
-  const descriptor = Object.getOwnPropertyDescriptor(error, propName)
-  return descriptor !== undefined && !descriptor.configurable
-}
-
 // Ensure error properties are writable and non-enumerable
 export const normalizeDescriptors = function (error) {
   CORE_ERROR_PROPS.forEach((propName) => {
@@ -20,7 +5,7 @@ export const normalizeDescriptors = function (error) {
   })
 }
 
-const CORE_ERROR_PROPS = ['name', 'message', 'stack', 'cause', 'errors']
+export const CORE_ERROR_PROPS = ['name', 'message', 'stack', 'cause', 'errors']
 
 const normalizeDescriptor = function (error, propName) {
   const descriptor = getDescriptor(error, propName)
@@ -40,7 +25,7 @@ const normalizeDescriptor = function (error, propName) {
 }
 
 // `Error.name` is usually on the prototype, i.e. it is not an own property
-const getDescriptor = function (value, propName) {
+export const getDescriptor = function (value, propName) {
   const descriptor = Object.getOwnPropertyDescriptor(value, propName)
 
   if (descriptor !== undefined) {

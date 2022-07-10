@@ -1,20 +1,16 @@
 import { setErrorProperty } from '../descriptors.js'
 import { setFullStack } from '../stack.js'
 
+import { copyObject } from './copy.js'
+
 // Handle errors that are plain objects instead of Error instances
-export const objectifyError = function ({
-  name,
-  message,
-  stack,
-  cause,
-  errors,
-  ...object
-}) {
-  const messageA = getMessage(message, object)
+export const objectifyError = function (object) {
+  const { name, message, stack, cause, errors, ...objectA } = copyObject(object)
+  const messageA = getMessage(message, objectA)
   const error = newError(name, messageA)
 
   if (message === messageA) {
-    assignObjectProps(error, object)
+    assignObjectProps(error, objectA)
   }
 
   Object.entries({ name, stack, cause, errors }).forEach(
