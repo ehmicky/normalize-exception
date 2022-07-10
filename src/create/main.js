@@ -36,7 +36,7 @@ const handleNonError = function (value) {
   return isProxy(value) ? objectifyError(value) : stringifyError(value)
 }
 
-// Proxy of Errors are converted to non-proxies.
+// Proxies of Errors are converted to non-proxies.
 // This can only work within the same realm, because the only way to detect
 // proxies is combining `Object.prototype.toString()` and `instanceof`.
 const isProxy = function (value) {
