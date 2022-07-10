@@ -4,6 +4,8 @@ import test from 'ava'
 import normalizeException from 'normalize-exception'
 import { each } from 'test-each'
 
+const { toString: objectToString } = Object.prototype
+
 test('Plain-objects errors work cross-realm', (t) => {
   const props = runInNewContext('({ name: "test" })')
   const error = normalizeException(props)
@@ -39,3 +41,13 @@ each(
     })
   },
 )
+
+test('Handle proxies', (t) => {
+  const message = 'test'
+  // eslint-disable-next-line fp/no-proxy
+  const proxy = new Proxy(new Error(message), {})
+  const error = normalizeException(proxy)
+  t.true(error instanceof Error)
+  t.is(objectToString.call(error), '[object Error]')
+  t.is(error.message, message)
+})

@@ -43,6 +43,21 @@ test('Handle throwing getters on plain objects', (t) => {
   )
 })
 
+const invalidProxyGet = function (target, propName, receiver) {
+  if (propName === 'message') {
+    throw new Error('proxyError')
+  }
+
+  return Reflect.get(target, propName, receiver)
+}
+
+test('Handle throwing Proxy.get', (t) => {
+  const error = new Error('test')
+  // eslint-disable-next-line fp/no-proxy
+  const proxy = new Proxy(error, { get: invalidProxyGet })
+  t.is(normalizeException(proxy).message, '{}')
+})
+
 test('Plain-objects errors ignore non-enumerable static properties', (t) => {
   t.is(
     normalizeException(

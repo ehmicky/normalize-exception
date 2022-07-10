@@ -4,6 +4,8 @@ import { isNonModifiableError } from './modifiable.js'
 import { objectifyError } from './object.js'
 import { stringifyError } from './string.js'
 
+const { toString: objectToString } = Object.prototype
+
 // If an exception is not an Error instance, create one.
 export const createError = function (value) {
   if (isPlainObj(value)) {
@@ -11,7 +13,7 @@ export const createError = function (value) {
   }
 
   if (!isError(value)) {
-    return stringifyError(value)
+    return handleNonError(value)
   }
 
   if (isInvalidError(value)) {
@@ -30,7 +32,16 @@ const isError = function (value) {
   )
 }
 
-const { toString: objectToString } = Object.prototype
+const handleNonError = function (value) {
+  return isProxy(value) ? objectifyError(value) : stringifyError(value)
+}
+
+// Proxy of Errors are converted to non-proxies.
+// This can only work within the same realm, because the only way to detect
+// proxies is combining `Object.prototype.toString()` and `instanceof`.
+const isProxy = function (value) {
+  return value instanceof Error
+}
 
 const isInvalidError = function (value) {
   return isNonModifiableError(value) || hasInvalidConstructor(value)
