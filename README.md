@@ -18,7 +18,7 @@ This fixes the following problems:
   [cached](#cached-stack), [enumerable](#enumerable-properties),
   [readonly](#readonly-properties), [non-writable](#non-writable-properties),
   [non-configurable](#non-configurable-properties), [proxied](#proxies) or
-  [throwing](#unsafe-getters)
+  [throwing](#throwing-properties)
 
 # Examples
 
@@ -199,7 +199,26 @@ try {
 }
 ```
 
-## Unsafe getters
+## Throwing properties
+
+### Proxies
+
+<!-- eslint-disable fp/no-proxy, no-shadow -->
+
+```js
+try {
+  throw new Proxy(new Error('message'), {
+    get() {
+      throw new Error('example')
+    },
+  })
+} catch (error) {
+  console.log(error.message) // Throws
+  console.log(normalizeException(error).message) // Does not throw
+}
+```
+
+### Getters
 
 <!-- eslint-disable fp/no-mutating-methods, fp/no-get-set -->
 
