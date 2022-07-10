@@ -32,7 +32,7 @@ try {
 } catch (error) {
   console.log(error) // 'message'
   console.log(normalizeException(error)) // Error: message
-  console.log(error instanceof Error) // true
+  console.log(normalizeException(error) instanceof Error) // true
 }
 ```
 
@@ -108,6 +108,7 @@ try {
 try {
   throw new Error('message')
 } catch (error) {
+  console.log(error.stack) // Error: message
   error.message += ' other' // `error.stack` is cached, so it does not update
   console.log(error.stack) // Error: message
   console.log(normalizeException(error).stack) // Error: message other
@@ -120,11 +121,13 @@ try {
 
 ```js
 try {
-  throw Object.assign(new Error('message'), {
+  const error = new Error('message')
+  Object.assign(error, {
     get message() {
       throw new Error('example')
     },
   })
+  throw error
 } catch (error) {
   console.log(normalizeException(error).message) // Does not throw
   console.log(error.message) // Throws
