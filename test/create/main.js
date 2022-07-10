@@ -51,3 +51,33 @@ test('Handle proxies', (t) => {
   t.is(objectToString.call(error), '[object Error]')
   t.is(error.message, message)
 })
+
+const invalidProxyHook = function () {
+  throw new Error('proxyError')
+}
+
+each(
+  [
+    'set',
+    'get',
+    'deleteProperty',
+    'has',
+    'ownKeys',
+    'defineProperty',
+    'getOwnPropertyDescriptor',
+    'isExtensible',
+    'preventExtensions',
+    'getPrototypeOf',
+    'setPrototypeOf',
+    'apply',
+    'construct',
+  ],
+  ({ title }, hook) => {
+    test(`Handle throwing Proxy.get | ${title}`, (t) => {
+      const error = new Error('test')
+      // eslint-disable-next-line fp/no-proxy
+      const proxy = new Proxy(error, { [hook]: invalidProxyHook })
+      t.is(typeof normalizeException(proxy).message, 'string')
+    })
+  },
+)
