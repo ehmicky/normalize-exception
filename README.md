@@ -4,22 +4,20 @@
 [![Twitter](https://img.shields.io/badge/%E2%80%8B-twitter-brightgreen.svg?logo=twitter)](https://twitter.com/intent/follow?screen_name=ehmicky)
 [![Medium](https://img.shields.io/badge/%E2%80%8B-medium-brightgreen.svg?logo=medium)](https://medium.com/@ehmicky)
 
-Normalize exceptions/errors:
+Normalize:
 
 - Exceptions that are [not `Error` instances](#invalid-types)
-- Error properties (`name`, `message`, [`stack`](#invalid-stack)) that are
+- Error properties (`name`, `message`, `stack`) that are
   [missing](#missing-properties), [invalid](#invalid-properties),
   [cached](#cached-stack), [enumerable](#enumerable-properties),
   [readonly](#readonly-properties), [non-writable](#non-writable-properties),
   [non-configurable](#non-configurable-properties),
   [non-extensible](#non-extensible-error), [proxied](#proxies) or
   [throwing](#throwing-properties)
-
-If
-[`error.cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause)
-or
-[`error.errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)
-is present, they are [normalized recursively](#recursion) as well.
+- [`error.cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause)
+  and
+  [`error.errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)
+  [recursively](#recursion), when present
 
 # Example
 
