@@ -4,11 +4,7 @@
 [![Twitter](https://img.shields.io/badge/%E2%80%8B-twitter-brightgreen.svg?logo=twitter)](https://twitter.com/intent/follow?screen_name=ehmicky)
 [![Medium](https://img.shields.io/badge/%E2%80%8B-medium-brightgreen.svg?logo=medium)](https://medium.com/@ehmicky)
 
-Normalize exceptions/errors.
-
-# Features
-
-This fixes the following problems:
+Normalize exceptions/errors:
 
 - Exceptions that are [not `Error` instances](#invalid-types)
 - Error properties (`name`, `message`, [`stack`](#invalid-stack)) that are
@@ -25,7 +21,47 @@ or
 [`error.errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)
 is present, they are [normalized recursively](#recursion) as well.
 
-# Examples
+# Example
+
+<!-- eslint-disable no-throw-literal -->
+
+```js
+import normalizeException from 'normalize-exception'
+
+try {
+  throw 'message'
+} catch (error) {
+  console.log(error) // 'message'
+  console.log(normalizeException(error)) // Error: message
+  console.log(normalizeException(error) instanceof Error) // true
+}
+```
+
+# Install
+
+```bash
+npm install normalize-exception
+```
+
+This package is an ES module and must be loaded using
+[an `import` or `import()` statement](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c),
+not `require()`.
+
+# API
+
+## normalizeException(error)
+
+`error` `any`\
+_Return value_: `Error`
+
+`normalizeException()` never throws.
+
+If `error` is an `Error` instance, it is returned. Any missing or invalid error
+property is directly modified.
+
+If it is not an `Error` instance, a new one is created and returned.
+
+# Features
 
 ## Invalid types
 
@@ -34,8 +70,6 @@ is present, they are [normalized recursively](#recursion) as well.
 <!-- eslint-disable no-throw-literal -->
 
 ```js
-import normalizeException from 'normalize-exception'
-
 try {
   throw 'message'
 } catch (error) {
@@ -282,30 +316,6 @@ try {
   console.log(normalizeException(error).errors[0] instanceof Error) // true
 }
 ```
-
-# Install
-
-```bash
-npm install normalize-exception
-```
-
-This package is an ES module and must be loaded using
-[an `import` or `import()` statement](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c),
-not `require()`.
-
-# API
-
-## normalizeException(error)
-
-`error` `any`\
-_Return value_: `Error`
-
-`normalizeException()` never throws.
-
-If `error` is an `Error` instance, it is returned. Any missing or invalid error
-property is directly modified.
-
-If it is not an `Error` instance, a new one is created and returned.
 
 # Related projects
 
