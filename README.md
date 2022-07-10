@@ -17,7 +17,7 @@ This fixes the following problems:
   that are [missing](#missing-properties), [invalid](#invalid-properties),
   [cached](#cached-stack), [enumerable](#enumerable-properties),
   [readonly](#readonly-properties), [non-writable](#non-writable-properties),
-  [non-configurable](#non-configurable-properties) or
+  [non-configurable](#non-configurable-properties), [proxied](#proxies) or
   [throwing](#unsafe-getters)
 
 # Examples
@@ -182,6 +182,20 @@ try {
 } catch (error) {
   delete error.message // Throws
   delete normalizeException(error).message // Does not throw
+}
+```
+
+## Proxies
+
+<!-- eslint-disable fp/no-proxy, no-shadow -->
+
+```js
+try {
+  throw new Proxy(new Error('message'), {})
+} catch (error) {
+  const { toString } = Object.prototype
+  console.log(toString.call(error)) // '[object Object]'
+  console.log(toString.call(normalizeException(error))) // '[object Error]'
 }
 ```
 
