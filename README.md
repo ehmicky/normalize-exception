@@ -256,6 +256,17 @@ try {
 }
 ```
 
+### `error.errors`
+
+```js
+try {
+  throw new AggregateError(['innerError'], 'message')
+} catch (error) {
+  console.log(error.errors[0] instanceof Error) // false
+  console.log(normalizeException(error).errors[0] instanceof Error) // true
+}
+```
+
 # Install
 
 ```bash
