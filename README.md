@@ -14,7 +14,8 @@ This fixes the following problems:
 - [Missing](#missing-properties) or
   [invalid error properties](#invalid-properties): `name`, `message`,
   [`stack`](#invalid-stack), `cause`, `errors`.
-- Error properties that are [unsafe getters](#unsafe-getters)
+- Error properties that are [readonly](#readonly-properties) or
+  [throw](#unsafe-getters)
 
 # Examples
 
@@ -56,8 +57,8 @@ try {
 try {
   throw null
 } catch (error) {
-  console.log(normalizeException(error).message) // 'null'
   console.log(error.message) // Throws
+  console.log(normalizeException(error).message) // 'null'
 }
 ```
 
@@ -115,22 +116,37 @@ try {
 }
 ```
 
-## Unsafe getters
+## Readonly properties
 
-<!-- eslint-disable fp/no-mutating-assign, fp/no-get-set -->
+<!-- eslint-disable fp/no-mutating-methods, fp/no-get-set, fp/no-mutation -->
 
 ```js
 try {
   const error = new Error('message')
-  Object.assign(error, {
-    get message() {
+  Object.defineProperty(error, 'message', { get: () => 'message' })
+  throw error
+} catch (error) {
+  error.message = 'other' // Throws
+  normalizeException(error).message = 'other' // Does not throw
+}
+```
+
+## Unsafe getters
+
+<!-- eslint-disable fp/no-mutating-methods, fp/no-get-set -->
+
+```js
+try {
+  const error = new Error('message')
+  Object.defineProperty(error, 'message', {
+    get() {
       throw new Error('example')
     },
   })
   throw error
 } catch (error) {
-  console.log(normalizeException(error).message) // Does not throw
   console.log(error.message) // Throws
+  console.log(normalizeException(error).message) // Does not throw
 }
 ```
 
