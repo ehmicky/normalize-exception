@@ -11,14 +11,18 @@ Normalize exceptions/errors.
 This fixes the following problems:
 
 - Exceptions that are [not `Error` instances](#invalid-types)
-- Error properties (`name`, `message`, [`stack`](#invalid-stack),
-  [`cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause),
-  [`errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError))
-  that are [missing](#missing-properties), [invalid](#invalid-properties),
+- Error properties (`name`, `message`, [`stack`](#invalid-stack)) that are
+  [missing](#missing-properties), [invalid](#invalid-properties),
   [cached](#cached-stack), [enumerable](#enumerable-properties),
   [readonly](#readonly-properties), [non-writable](#non-writable-properties),
   [non-configurable](#non-configurable-properties), [proxied](#proxies) or
   [throwing](#throwing-properties)
+
+If
+[`error.cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause)
+or
+[`error.errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)
+is present, they are [normalized recursively](#recursion) as well.
 
 # Examples
 
@@ -99,10 +103,12 @@ try {
 
 ```js
 try {
-  throw new Error('message', { cause: 'innerError' })
+  const error = new Error('message')
+  error.message = true
+  throw error
 } catch (error) {
-  console.log(error.cause instanceof Error) // false
-  console.log(normalizeException(error).cause instanceof Error) // true
+  console.log(typeof error.message) // 'boolean'
+  console.log(typeof normalizeException(error).message) // 'string'
 }
 ```
 
@@ -234,6 +240,19 @@ try {
 } catch (error) {
   console.log(error.message) // Throws
   console.log(normalizeException(error).message) // Does not throw
+}
+```
+
+## Recursion
+
+### `error.cause`
+
+```js
+try {
+  throw new Error('message', { cause: 'innerError' })
+} catch (error) {
+  console.log(error.cause instanceof Error) // false
+  console.log(normalizeException(error).cause instanceof Error) // true
 }
 ```
 
