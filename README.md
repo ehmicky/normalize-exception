@@ -11,11 +11,14 @@ Normalize exceptions/errors.
 This fixes the following problems:
 
 - Exceptions that are [not `Error` instances](#invalid-types)
-- [Missing](#missing-properties) or
-  [invalid error properties](#invalid-properties): `name`, `message`,
-  [`stack`](#invalid-stack), `cause`, `errors`.
-- Error properties that are [readonly](#readonly-properties) or
-  [throw](#unsafe-getters)
+- Error properties (`name`, `message`, [`stack`](#invalid-stack),
+  [`cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause),
+  [`errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError))
+  that are:
+  - [Missing](#missing-properties)
+  - [Invalid](#invalid-properties)
+  - [Readonly](#readonly-properties)
+  - [Throwing](#unsafe-getters)
 
 # Examples
 
