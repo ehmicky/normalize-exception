@@ -43,18 +43,14 @@ test('Handle throwing getters on plain objects', (t) => {
   )
 })
 
-const invalidProxyGet = function (target, propName, receiver) {
-  if (propName === 'message') {
-    throw new Error('proxyError')
-  }
-
-  return Reflect.get(target, propName, receiver)
+const invalidProxyHook = function () {
+  throw new Error('proxyError')
 }
 
 test('Handle throwing Proxy.get', (t) => {
   const error = new Error('test')
   // eslint-disable-next-line fp/no-proxy
-  const proxy = new Proxy(error, { get: invalidProxyGet })
+  const proxy = new Proxy(error, { get: invalidProxyHook })
   t.is(normalizeException(proxy).message, '{}')
 })
 

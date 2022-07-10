@@ -25,11 +25,16 @@ export const createError = function (value) {
 
 // Unlike `instanceof Error`, this works cross-realm,
 // e.g. `vm.runInNewContext('Error')`
+// Handle hooks exceptions when `value` is a Proxy
 const isError = function (value) {
-  return (
-    objectToString.call(value) === '[object Error]' &&
-    !(Symbol.toStringTag in value)
-  )
+  try {
+    return (
+      objectToString.call(value) === '[object Error]' &&
+      !(Symbol.toStringTag in value)
+    )
+  } catch {
+    return false
+  }
 }
 
 const handleNonError = function (value) {
