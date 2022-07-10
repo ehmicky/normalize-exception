@@ -15,7 +15,8 @@ This fixes the following problems:
   [missing](#missing-properties), [invalid](#invalid-properties),
   [cached](#cached-stack), [enumerable](#enumerable-properties),
   [readonly](#readonly-properties), [non-writable](#non-writable-properties),
-  [non-configurable](#non-configurable-properties), [proxied](#proxies) or
+  [non-configurable](#non-configurable-properties),
+  [non-extensible](#non-extensible-error), [proxied](#proxies) or
   [throwing](#throwing-properties)
 
 If
@@ -188,6 +189,21 @@ try {
 } catch (error) {
   delete error.message // Throws
   delete normalizeException(error).message // Does not throw
+}
+```
+
+## Non-extensible error
+
+<!-- eslint-disable fp/no-mutation -->
+
+```js
+try {
+  const error = new Error('message')
+  Object.preventExtensions(error)
+  throw error
+} catch (error) {
+  error.prop = true // Throws
+  normalizeException(error).prop = true // Does not throw
 }
 ```
 
