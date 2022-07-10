@@ -22,7 +22,7 @@ This fixes the following problems:
 
 ### Strings
 
-<!-- eslint-disable unicorn/no-null, no-throw-literal -->
+<!-- eslint-disable no-throw-literal -->
 
 ```js
 import normalizeException from 'normalize-exception'
@@ -38,8 +38,14 @@ try {
 
 ### Plain objects
 
+<!-- eslint-disable no-throw-literal -->
+
 ```js
-console.log(normalizeException({ name: 'TypeError', message: 'message' })) // TypeError: message
+try {
+  throw { name: 'TypeError', message: 'message' }
+} catch (error) {
+  console.log(normalizeException(error)) // TypeError: message
+}
 ```
 
 ### Others
@@ -47,7 +53,12 @@ console.log(normalizeException({ name: 'TypeError', message: 'message' })) // Ty
 <!-- eslint-disable unicorn/no-null, no-throw-literal -->
 
 ```js
-console.log(normalizeException(null)) // Error: null
+try {
+  throw null
+} catch (error) {
+  console.log(normalizeException(error).message) // 'null'
+  console.log(error.message) // Throws
+}
 ```
 
 ## Missing properties
@@ -55,21 +66,25 @@ console.log(normalizeException(null)) // Error: null
 <!-- eslint-disable fp/no-delete -->
 
 ```js
-const error = new TypeError('message')
-delete error.name
-console.log(error.name) // undefined
-console.log(normalizeException(error).name) // 'TypeError'
+try {
+  const error = new TypeError('message')
+  delete error.name
+  throw error
+} catch (error) {
+  console.log(error.name) // undefined
+  console.log(normalizeException(error).name) // 'TypeError'
+}
 ```
 
 ## Invalid properties
 
 ```js
-const error = new Error('message', { cause: 'innerError' })
-console.log(error.cause instanceof Error) // false
-
-const normalizedError = normalizeException(error)
-console.log(normalizedError.cause instanceof Error) // true
-console.log(normalizedError.cause) // Error: innerError
+try {
+  throw new Error('message', { cause: 'innerError' })
+} catch (error) {
+  console.log(error.cause instanceof Error) // false
+  console.log(normalizeException(error).cause instanceof Error) // true
+}
 ```
 
 ## Missing stack
@@ -77,41 +92,43 @@ console.log(normalizedError.cause) // Error: innerError
 <!-- eslint-disable fp/no-delete -->
 
 ```js
-const error = new Error('message')
-delete error.stack
-console.log(error.stack) // undefined
-console.log(normalizeException(error).stack) // 'Error: message ...'
+try {
+  const error = new Error('message')
+  delete error.stack
+  throw error
+} catch (error) {
+  console.log(error.stack) // undefined
+  console.log(normalizeException(error).stack) // 'Error: message ...'
+}
 ```
 
 ## Invalid stack
 
 ```js
-const error = new TypeError('message')
-console.log(error.stack) // TypeError: message
-
-// `error.stack` is cached, so it does not update
-error.message += ' otherMessage'
-console.log(error.stack) // TypeError: message
-console.log(normalizeException(error).stack) // TypeError: message otherMessage
+try {
+  throw new Error('message')
+} catch (error) {
+  error.message += ' other' // `error.stack` is cached, so it does not update
+  console.log(error.stack) // Error: message
+  console.log(normalizeException(error).stack) // Error: message other
+}
 ```
 
 ## Unsafe getters
 
-<!-- eslint-disable fp/no-mutating-methods, no-unused-expressions -->
+<!-- eslint-disable fp/no-mutating-assign, fp/no-get-set -->
 
 ```js
-const error = new Error('message')
-Object.defineProperty(error, 'message', {
-  get() {
-    throw new Error('example')
-  },
-})
-
 try {
-  error.message // This throws
-} catch {}
-
-normalizeException(error).message // This does not throw
+  throw Object.assign(new Error('message'), {
+    get message() {
+      throw new Error('example')
+    },
+  })
+} catch (error) {
+  console.log(normalizeException(error).message) // Does not throw
+  console.log(error.message) // Throws
+}
 ```
 
 # Install
