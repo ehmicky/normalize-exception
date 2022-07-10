@@ -22,8 +22,17 @@ This fixes the following problems:
 
 ### Strings
 
+<!-- eslint-disable unicorn/no-null, no-throw-literal -->
+
 ```js
-console.log(normalizeException('message')) // Error: message
+import normalizeException from 'normalize-exception'
+
+try {
+  throw 'message'
+} catch (error) {
+  console.log(error) // 'message'
+  console.log(normalizeException(error)) // Error: message
+}
 ```
 
 ### Plain objects
@@ -37,16 +46,7 @@ console.log(normalizeException({ name: 'TypeError', message: 'message' })) // Ty
 <!-- eslint-disable unicorn/no-null, no-throw-literal -->
 
 ```js
-import normalizeException from 'normalize-exception'
-
-try {
-  throw null
-} catch (error) {
-  const normalizedError = normalizeException(error)
-  console.log(normalizedError) // Error: null
-  // Without `normalizeException()`, this would throw
-  console.log(normalizedError.name)
-}
+console.log(normalizeException(null)) // Error: null
 ```
 
 ## Missing properties
