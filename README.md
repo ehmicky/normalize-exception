@@ -6,7 +6,7 @@
 
 Normalize:
 
-- Exceptions that are [not `Error` instances](#invalid-types)
+- Exceptions that are [not `Error` instances](#invalid-type)
 - Error properties (`name`, `message`, `stack`) that are
   [missing](#missing-properties), [invalid](#invalid-properties),
   [cached](#cached-stack), [enumerable](#enumerable-properties),
@@ -61,7 +61,7 @@ If it is not an `Error` instance, a new one is created and returned.
 
 # Features
 
-## Invalid types
+## Invalid type
 
 ### Strings
 
@@ -201,7 +201,7 @@ try {
 ```js
 try {
   const error = new Error('message')
-  Object.defineProperty(error, 'message', { value: 'message', writable: false })
+  Object.defineProperty(error, 'message', { value: '', writable: false })
   throw error
 } catch (error) {
   error.message = 'other' // Throws
