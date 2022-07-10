@@ -19,7 +19,7 @@ const isNonConfigurableProp = function (error, propName) {
   return descriptor !== undefined && !descriptor.configurable
 }
 
-// Handle when the property is a getter (or a Proxy property) that throws
+// Handle when the property is a getter that throws
 const isThrowingProp = function (error, propName) {
   try {
     // eslint-disable-next-line no-unused-expressions
