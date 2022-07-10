@@ -131,6 +131,21 @@ try {
 }
 ```
 
+## Non-writable properties
+
+<!-- eslint-disable fp/no-mutating-methods, fp/no-mutation -->
+
+```js
+try {
+  const error = new Error('message')
+  Object.defineProperty(error, 'message', { value: 'message', writable: false })
+  throw error
+} catch (error) {
+  error.message = 'other' // Throws
+  normalizeException(error).message = 'other' // Does not throw
+}
+```
+
 ## Unsafe getters
 
 <!-- eslint-disable fp/no-mutating-methods, fp/no-get-set -->
