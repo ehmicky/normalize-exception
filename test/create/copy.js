@@ -1,44 +1,34 @@
 import test from 'ava'
 import normalizeException from 'normalize-exception'
 
+const setInvalidProp = function (propName) {
+  // eslint-disable-next-line fp/no-mutating-methods
+  return Object.defineProperty(new Error('test'), propName, { get: invalidGet })
+}
+
 const invalidGet = function () {
   throw new Error('getterError')
 }
 
 test('Handle throwing getters on name', (t) => {
-  const error = new Error('test')
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'name', { get: invalidGet })
-  t.is(normalizeException(error).name, 'Error')
+  t.is(normalizeException(setInvalidProp('name')).name, 'Error')
 })
 
 test('Handle throwing getters on message', (t) => {
-  const error = new Error('test')
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'message', { get: invalidGet })
-  t.is(normalizeException(error).message, '{}')
+  t.is(normalizeException(setInvalidProp('message')).message, '{}')
 })
 
 test('Handle throwing getters on stack', (t) => {
-  const error = new Error('test')
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'stack', { get: invalidGet })
-  const errorA = normalizeException(error)
-  t.true(errorA.stack.includes(errorA.toString()))
+  const error = normalizeException(setInvalidProp('stack'))
+  t.true(error.stack.includes(error.toString()))
 })
 
 test('Handle throwing getters on cause', (t) => {
-  const error = new Error('test')
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'cause', { get: invalidGet })
-  t.is(normalizeException(error).cause, undefined)
+  t.is(normalizeException(setInvalidProp('cause')).cause, undefined)
 })
 
 test('Handle throwing getters on aggregate errors', (t) => {
-  const error = new Error('test')
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'errors', { get: invalidGet })
-  t.is(normalizeException(error).errors, undefined)
+  t.is(normalizeException(setInvalidProp('errors')).errors, undefined)
 })
 
 test('Handle throwing getters on plain objects', (t) => {
