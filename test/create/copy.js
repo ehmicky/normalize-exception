@@ -41,11 +41,16 @@ test('Handle throwing getters on aggregate errors', (t) => {
   t.is(normalizeException(error).errors, undefined)
 })
 
-test('Handle throwing getters on name on plain objects', (t) => {
-  const error = {}
-  // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(error, 'name', { get: invalidGet, enumerable: true })
-  t.is(normalizeException(error).name, 'Error')
+test('Handle throwing getters on plain objects', (t) => {
+  t.is(
+    normalizeException({
+      // eslint-disable-next-line fp/no-get-set
+      get name() {
+        throw new Error('getterError')
+      },
+    }).name,
+    'Error',
+  )
 })
 
 test('Plain-objects errors ignore non-enumerable static properties', (t) => {
