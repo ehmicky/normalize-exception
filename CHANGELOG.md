@@ -1,3 +1,9 @@
+# 1.3.0
+
+## Features
+
+- Improve handling of errors that are `Proxy` instances
+
 # 1.2.0
 
 ## Features
