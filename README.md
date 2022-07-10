@@ -15,7 +15,9 @@ This fixes the following problems:
   [`cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause),
   [`errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError))
   that are [missing](#missing-properties), [invalid](#invalid-properties),
-  [enumerable](#enumerable-properties), [readonly](#readonly-properties) or
+  [enumerable](#enumerable-properties), [readonly](#readonly-properties),
+  [non-writable](#non-writable-properties),
+  [non-configurable](#non-configurable-properties) or
   [throwing](#unsafe-getters)
 
 # Examples
@@ -165,6 +167,21 @@ try {
 } catch (error) {
   error.message = 'other' // Throws
   normalizeException(error).message = 'other' // Does not throw
+}
+```
+
+## Non-configurable properties
+
+<!-- eslint-disable fp/no-mutating-methods, fp/no-delete -->
+
+```js
+try {
+  const error = new Error('message')
+  Object.defineProperty(error, 'message', { value: '', configurable: false })
+  throw error
+} catch (error) {
+  delete error.message // Throws
+  delete normalizeException(error).message // Does not throw
 }
 ```
 
