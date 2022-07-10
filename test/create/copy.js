@@ -47,3 +47,26 @@ test('Handle throwing getters on name on plain objects', (t) => {
   Object.defineProperty(error, 'name', { get: invalidGet, enumerable: true })
   t.is(normalizeException(error).name, 'Error')
 })
+
+test('Plain-objects errors ignore non-enumerable static properties', (t) => {
+  const error = normalizeException(
+    // eslint-disable-next-line fp/no-mutating-methods
+    Object.defineProperty({ message: 'test' }, 'prop', {
+      value: true,
+      enumerable: false,
+    }),
+  )
+  t.is(error.prop, undefined)
+})
+
+test('Plain-objects errors do not ignore non-enumerable core properties', (t) => {
+  const name = 'TypeError'
+  const error = normalizeException(
+    // eslint-disable-next-line fp/no-mutating-methods
+    Object.defineProperty({ message: 'test' }, 'name', {
+      value: name,
+      enumerable: false,
+    }),
+  )
+  t.is(error.name, name)
+})
