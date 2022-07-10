@@ -6,12 +6,14 @@
 
 Normalize exceptions/errors.
 
-In JavaScript, one can `throw` any value including strings, objects (like
-`{ message: "..." }`) or even `undefined`. This normalizes any exception
-[to an `Error` instance](#invalid-types).
+# Features
 
-It also fixes any missing or [invalid error properties](#invalid-properties):
-`name`, `message`, [`stack`](#invalid-stack), `cause`, `errors`.
+This fixes the following problems:
+
+- Exceptions that are [not `Error` instances](#invalid-types)
+- [Missing or invalid error properties](#invalid-properties): `name`, `message`,
+  [`stack`](#invalid-stack), `cause`, `errors`.
+- Error properties that are [unsafe getters](#unsafe-getters)
 
 # Examples
 
@@ -63,6 +65,25 @@ console.log(error.cause instanceof Error) // false
 const normalizedError = normalizeException(error)
 console.log(normalizedError.cause instanceof Error) // true
 console.log(normalizedError.cause) // Error: innerError
+```
+
+## Unsafe getters
+
+<!-- eslint-disable fp/no-mutating-methods, no-unused-expressions -->
+
+```js
+const error = new Error('message')
+Object.defineProperty(error, 'message', {
+  get() {
+    throw new Error('example')
+  },
+})
+
+try {
+  error.message // This throws
+} catch {}
+
+normalizeException(error).message // This does not throw
 ```
 
 # Install
