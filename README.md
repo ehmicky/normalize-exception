@@ -15,8 +15,8 @@ This fixes the following problems:
   [`cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause),
   [`errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError))
   that are [missing](#missing-properties), [invalid](#invalid-properties),
-  [enumerable](#enumerable-properties), [readonly](#readonly-properties),
-  [non-writable](#non-writable-properties),
+  [cached](#cached-stack), [enumerable](#enumerable-properties),
+  [readonly](#readonly-properties), [non-writable](#non-writable-properties),
   [non-configurable](#non-configurable-properties) or
   [throwing](#unsafe-getters)
 
@@ -80,17 +80,6 @@ try {
 }
 ```
 
-## Invalid properties
-
-```js
-try {
-  throw new Error('message', { cause: 'innerError' })
-} catch (error) {
-  console.log(error.cause instanceof Error) // false
-  console.log(normalizeException(error).cause instanceof Error) // true
-}
-```
-
 ## Missing stack
 
 <!-- eslint-disable fp/no-delete -->
@@ -106,7 +95,18 @@ try {
 }
 ```
 
-## Invalid stack
+## Invalid properties
+
+```js
+try {
+  throw new Error('message', { cause: 'innerError' })
+} catch (error) {
+  console.log(error.cause instanceof Error) // false
+  console.log(normalizeException(error).cause instanceof Error) // true
+}
+```
+
+## Cached stack
 
 ```js
 try {
