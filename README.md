@@ -15,7 +15,8 @@ This fixes the following problems:
   [`cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause),
   [`errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError))
   that are [missing](#missing-properties), [invalid](#invalid-properties),
-  [readonly](#readonly-properties) or [throwing](#unsafe-getters)
+  [enumerable](#enumerable-properties), [readonly](#readonly-properties) or
+  [throwing](#unsafe-getters)
 
 # Examples
 
@@ -113,6 +114,27 @@ try {
   error.message += ' other' // `error.stack` is cached, so it does not update
   console.log(error.stack) // Error: message
   console.log(normalizeException(error).stack) // Error: message other
+}
+```
+
+## Enumerable properties
+
+<!-- eslint-disable fp/no-class, fp/no-this, fp/no-mutation -->
+
+```js
+class ExampleError extends Error {
+  constructor(...args) {
+    super(...args)
+    // Common mistake: this makes `error.name` enumerable
+    this.name = 'ExampleError'
+  }
+}
+
+try {
+  throw new ExampleError('message')
+} catch (error) {
+  console.log({ ...error }) // { name: 'Error' }
+  console.log({ ...normalizeException(error) }) // {}
 }
 ```
 
