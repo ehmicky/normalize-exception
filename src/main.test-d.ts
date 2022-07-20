@@ -1,5 +1,6 @@
-import normalizeException from 'normalize-exception'
 import { expectType, expectError } from 'tsd'
+
+import normalizeException from './main.js'
 
 expectType<Error>(normalizeException(new Error('test')))
 normalizeException(undefined)
