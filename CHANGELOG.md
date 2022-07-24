@@ -1,3 +1,9 @@
+# 1.4.1
+
+## Chore
+
+- Update homepage in `package.json`
+
 # 1.4.0
 
 ## Features
