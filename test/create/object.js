@@ -28,8 +28,7 @@ test('Plain-objects errors can have messages', (t) => {
 
 each(['', true], ({ title }, message) => {
   test(`Plain-objects errors cannot have invalid messages | ${title}`, (t) => {
-    const error = normalizeException({ message })
-    t.is(error.message, '{}')
+    t.is(normalizeException({ message }).message, '{}')
   })
 })
 
@@ -39,28 +38,32 @@ test('Plain-objects errors without messages are serialized', (t) => {
 })
 
 test('Plain-objects errors without messages are serialized even with recursion', (t) => {
-  const baseException = { prop: true }
   const exception = { prop: true }
   // eslint-disable-next-line fp/no-mutation
   exception.self = exception
   const error = normalizeException(exception)
-  t.is(error.message, JSON.stringify({ ...baseException, self: baseException }))
+  t.is(error.message, JSON.stringify({ prop: true, self: { prop: true } }))
 })
+
+const throwError = function () {
+  throw new Error('test')
+}
 
 test('Plain-objects errors without messages are serialized even with unsafe fields', (t) => {
   const exception = {
     one: true,
-    two: {
-      toJSON() {
-        throw new Error('test')
-      },
-    },
+    two: { toJSON: throwError },
     // eslint-disable-next-line fp/no-get-set
     get three() {
       throw new Error('test')
     },
   }
   t.is(normalizeException(exception).message, JSON.stringify({ one: true }))
+})
+
+test('Plain-objects errors without messages are serialized even with top-level unsafe fields', (t) => {
+  const exception = { toJSON: throwError }
+  t.is(normalizeException(exception).message, 'Invalid error')
 })
 
 test('Plain-objects errors without messages but with bigints are serialized', (t) => {
@@ -83,8 +86,7 @@ test('Plain-objects errors can have stacks', (t) => {
 })
 
 test('Plain-objects errors without stacks get one', (t) => {
-  const error = normalizeException({})
-  t.true(error.stack.includes('at '))
+  t.true(normalizeException({}).stack.includes('at '))
 })
 
 test('Plain-objects errors can have causes', (t) => {
@@ -102,6 +104,5 @@ test('Plain-objects errors can have aggregate errors', (t) => {
 })
 
 test('Plain-objects errors can have static properties', (t) => {
-  const error = normalizeException({ message: 'test', prop: true })
-  t.true(error.prop)
+  t.true(normalizeException({ message: 'test', prop: true }).prop)
 })

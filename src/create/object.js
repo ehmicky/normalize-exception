@@ -35,7 +35,7 @@ const getMessage = function (message, object) {
   }
 
   const { value } = safeJsonValue(object, { maxSize: MESSAGE_MAX_SIZE })
-  return JSON.stringify(value)
+  return value === undefined ? 'Invalid error' : JSON.stringify(value)
 }
 
 const MESSAGE_MAX_SIZE = 1e3
