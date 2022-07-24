@@ -1,3 +1,5 @@
+import safeJsonValue from 'safe-json-value'
+
 import { setErrorProperty } from '../descriptors.js'
 import { setFullStack } from '../stack.js'
 
@@ -26,21 +28,17 @@ export const objectifyError = function (object) {
   return error
 }
 
+// If no `message` property is defined, stringify the object.
 const getMessage = function (message, object) {
-  return typeof message === 'string' && message !== ''
-    ? message
-    : jsonStringify(object)
+  if (typeof message === 'string' && message !== '') {
+    return message
+  }
+
+  const { value } = safeJsonValue(object, { maxSize: MESSAGE_MAX_SIZE })
+  return JSON.stringify(value)
 }
 
-// If no `message` property is defined, stringify the object.
-// This might throw on self references.
-const jsonStringify = function (object) {
-  try {
-    return JSON.stringify(object)
-  } catch {
-    return Object.keys(object).join(', ')
-  }
-}
+const MESSAGE_MAX_SIZE = 1e3
 
 const newError = function (name, message) {
   if (name === 'AggregateError' && 'AggregateError' in globalThis) {

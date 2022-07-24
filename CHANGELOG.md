@@ -1,3 +1,9 @@
+# 1.4.0
+
+## Features
+
+- Improve handling of errors that are plain objects
+
 # 1.3.0
 
 ## Features
