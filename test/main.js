@@ -68,6 +68,14 @@ each(['name', 'message'], ({ title }, propName) => {
   })
 })
 
+test('Does not fix error.stack with a prefixed header', (t) => {
+  const error = new TypeError('test')
+  const newStack = `Test\n${error.stack}`
+  error.stack = newStack
+  const errorA = normalizeException(error)
+  t.is(errorA.stack, newStack)
+})
+
 test('Fix invalid error.stack with no stack lines', (t) => {
   const error = new TypeError('test')
   error.stack = 'test'

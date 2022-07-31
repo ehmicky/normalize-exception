@@ -1,3 +1,9 @@
+# 1.4.2
+
+## Bug fixes
+
+- Better handling of Node.js `--enable-source-maps` CLI flag
+
 # 1.4.1
 
 ## Chore

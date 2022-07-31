@@ -11,7 +11,7 @@ export const setFullStack = function (error) {
 export const fixStack = function (error) {
   const header = getStackHeader(error)
 
-  if (error.stack.startsWith(header)) {
+  if (error.stack.includes(header)) {
     return
   }
 
@@ -23,6 +23,8 @@ export const fixStack = function (error) {
 }
 
 // Expected first line of `error.stack`
+// `--enable-source-maps` in Node.js prepends the inlined source code before
+// that header. We make sure this is kept when possible.
 const getStackHeader = function (error) {
   return `${error.name}: ${error.message}`
 }
