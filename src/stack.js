@@ -46,7 +46,6 @@ const getStackTrace = function () {
 }
 
 // Remove stack lines due to this library itself.
-// `index` should never be `-1`, but we include this as a failsafe.
 // The stack trace might be truncated, e.g. due to `Error.stackTraceLimit` in
 // Node.js, leading to the whole stack to be removed. In that case, we keep the
 // last stack line.

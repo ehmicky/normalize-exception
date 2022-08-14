@@ -43,7 +43,7 @@ test.serial(
 test.serial('New stack internal code removal with stackTraceLimit low', (t) => {
   const { stackTraceLimit } = Error
   // eslint-disable-next-line fp/no-mutation
-  Error.stackTraceLimit = 6
+  Error.stackTraceLimit = 7
   t.true(normalizeException().stack.includes('at '))
   // eslint-disable-next-line fp/no-mutation
   Error.stackTraceLimit = stackTraceLimit
