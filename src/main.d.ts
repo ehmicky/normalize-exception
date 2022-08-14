@@ -1,3 +1,9 @@
+type DefinedString<Value, DefaultValue> = Value extends string
+  ? Value extends ''
+    ? DefaultValue
+    : Value
+  : DefaultValue
+
 /**
  * Normalize exception/error.
  *
@@ -43,4 +49,11 @@
  * console.log(normalizedError.cause) // Error: innerError
  * ```
  */
-export default function normalizeException(error: unknown): Error
+export default function normalizeException<ErrorArg>(
+  error: ErrorArg,
+): ErrorArg extends Error
+  ? Error & {
+      name: DefinedString<ErrorArg['name'], Error['constructor']['name']>
+      message: DefinedString<ErrorArg['message'], ''>
+    }
+  : Error
