@@ -42,7 +42,7 @@ test('Plain-objects errors without messages are serialized even with recursion',
   // eslint-disable-next-line fp/no-mutation
   exception.self = exception
   const error = normalizeException(exception)
-  t.is(error.message, JSON.stringify({ prop: true, self: { prop: true } }))
+  t.is(error.message, String({}))
 })
 
 const throwError = function () {
@@ -58,24 +58,32 @@ test('Plain-objects errors without messages are serialized even with unsafe fiel
       throw new Error('test')
     },
   }
-  t.is(normalizeException(exception).message, JSON.stringify({ one: true }))
+  t.is(normalizeException(exception).message, String({}))
 })
 
 test('Plain-objects errors without messages are serialized even with top-level unsafe fields', (t) => {
   const exception = { toJSON: throwError }
+  t.is(normalizeException(exception).message, String({}))
+})
+
+test('Plain-objects errors without messages are serialized even with invalid toString()', (t) => {
+  const exception = { one: true, two: 0n, toString: throwError }
   t.is(normalizeException(exception).message, 'Invalid error')
 })
 
 test('Plain-objects errors without messages but with bigints are serialized', (t) => {
   const exception = { one: true, two: 0n }
-  t.is(normalizeException(exception).message, JSON.stringify({ one: true }))
+  t.is(normalizeException(exception).message, String({}))
 })
 
 test('Plain-objects errors without messages but with long fields are serialized', (t) => {
-  // eslint-disable-next-line no-magic-numbers
-  const exception = { one: true, two: 'a'.repeat(1e6) }
-  t.is(normalizeException(exception).message, JSON.stringify({ one: true }))
+  const exception = { one: true, two: 'a'.repeat(BIG_STRING_LENGTH) }
+  const { message } = normalizeException(exception)
+  t.true(message.includes('one'))
+  t.true(message.length < BIG_STRING_LENGTH)
 })
+
+const BIG_STRING_LENGTH = 1e6
 
 test('Plain-objects errors can have stacks', (t) => {
   const message = 'test'

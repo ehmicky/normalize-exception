@@ -1,5 +1,3 @@
-import safeJsonValue from 'safe-json-value'
-
 import { setErrorProperty } from '../descriptors.js'
 import { setFullStack } from '../stack.js'
 
@@ -30,12 +28,31 @@ export const objectifyError = function (object) {
 
 // If no `message` property is defined, stringify the object.
 const getMessage = function (message, object) {
-  if (typeof message === 'string' && message !== '') {
-    return message
-  }
+  return typeof message === 'string' && message !== ''
+    ? message
+    : truncateMessage(safeJsonStringify(object))
+}
 
-  const { value } = safeJsonValue(object, { maxSize: MESSAGE_MAX_SIZE })
-  return value === undefined ? 'Invalid error' : JSON.stringify(value)
+const safeJsonStringify = function (object) {
+  try {
+    return JSON.stringify(object)
+  } catch {
+    return safeStringify(object)
+  }
+}
+
+const safeStringify = function (object) {
+  try {
+    return String(object)
+  } catch {
+    return 'Invalid error'
+  }
+}
+
+const truncateMessage = function (message) {
+  return message.length < MESSAGE_MAX_SIZE
+    ? message
+    : `${message.slice(0, MESSAGE_MAX_SIZE)}...`
 }
 
 const MESSAGE_MAX_SIZE = 1e3
