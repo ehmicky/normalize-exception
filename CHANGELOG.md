@@ -1,3 +1,9 @@
+# 1.8.0
+
+## Features
+
+- Ensure `error.name` matches `error.constructor.name`
+
 # 1.7.0
 
 ## Features

@@ -117,6 +117,21 @@ try {
 }
 ```
 
+## Mismatched name
+
+<!-- eslint-disable fp/no-delete -->
+
+```js
+try {
+  const error = new TypeError('message')
+  error.name = 'RangeError'
+  throw error
+} catch (error) {
+  console.log(error.name) // 'RangeError'
+  console.log(normalizeException(error).name) // 'TypeError'
+}
+```
+
 ## Missing stack
 
 <!-- eslint-disable fp/no-delete -->
