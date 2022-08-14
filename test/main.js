@@ -55,17 +55,21 @@ test.serial('Fix invalid error.name without constructor names', (t) => {
   Object.defineProperty(TypeError, 'name', { value: 'TypeError' })
 })
 
-each(['name', 'message'], ({ title }, propName) => {
-  test(`Fix invalid error.stack with wrong header | ${title}`, (t) => {
-    const error = new TypeError('test')
-    const lines = error.stack.split('\n')
-    const lastStackLine = lines[lines.length - 1]
-    const value = 'anything'
-    error[propName] = value
-    const errorA = normalizeException(error)
-    t.true(errorA.stack.includes(value))
-    t.true(errorA.stack.endsWith(lastStackLine))
-  })
+test('Fix error.name not matching constructor names', (t) => {
+  const error = new TypeError('test')
+  error.name = 'Error'
+  t.is(normalizeException(error).name, 'TypeError')
+})
+
+test('Fix invalid error.stack with wrong header', (t) => {
+  const error = new TypeError('test')
+  const lines = error.stack.split('\n')
+  const lastStackLine = lines[lines.length - 1]
+  const value = 'anything'
+  error.message = value
+  const errorA = normalizeException(error)
+  t.true(errorA.stack.includes(value))
+  t.true(errorA.stack.endsWith(lastStackLine))
 })
 
 test('Does not fix error.stack with a prefixed header', (t) => {

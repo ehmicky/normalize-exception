@@ -7,10 +7,10 @@ import { each } from 'test-each'
 const { toString: objectToString } = Object.prototype
 
 test('Plain-objects errors work cross-realm', (t) => {
-  const props = runInNewContext('({ name: "test" })')
+  const props = runInNewContext('({ name: "TypeError" })')
   const error = normalizeException(props)
-  t.is(error.name, 'test')
-  t.true(error instanceof Error)
+  t.is(error.name, 'TypeError')
+  t.true(error instanceof TypeError)
 })
 
 test('Plain-objects with toString tag', (t) => {

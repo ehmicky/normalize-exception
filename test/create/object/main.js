@@ -4,7 +4,7 @@ import normalizeException from 'normalize-exception'
 const { propertyIsEnumerable: isEnum } = Object.prototype
 
 test('Plain-objects errors can have names', (t) => {
-  const name = 'test'
+  const name = 'Error'
   const error = normalizeException({ name })
   t.is(error.name, name)
   t.false(isEnum.call(error, 'name'))

@@ -33,7 +33,7 @@ const normalizeProps = function (error, recurse) {
 
 // Ensure `error.name` is a string
 const normalizeName = function (error) {
-  if (!isDefinedString(error.name)) {
+  if (error.name !== error.constructor.name) {
     setErrorProperty(error, 'name', error.constructor.name)
   }
 }

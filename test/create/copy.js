@@ -73,20 +73,20 @@ test('Plain-objects errors do not ignore non-enumerable core properties', (t) =>
 // eslint-disable-next-line fp/no-class
 class ChildError extends Error {}
 // eslint-disable-next-line fp/no-mutating-methods
-Object.defineProperty(ChildError.prototype, 'name', { value: ChildError.name })
+Object.defineProperty(ChildError.prototype, 'message', { value: 'test' })
 // eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(ChildError.prototype, 'prop', { value: true })
 
 test('Plain-objects errors ignore inherited static properties', (t) => {
   const error = new ChildError()
-  error.constructor = undefined
+  Object.preventExtensions(error)
   t.is(error.prop, true)
   t.is(normalizeException(error).prop, undefined)
 })
 
 test('Plain-objects errors do not ignore inherited core properties', (t) => {
   const error = new ChildError()
-  error.constructor = undefined
-  t.is(error.name, 'ChildError')
-  t.is(normalizeException(error).name, 'ChildError')
+  Object.preventExtensions(error)
+  t.is(error.message, 'test')
+  t.is(normalizeException(error).message, 'test')
 })
