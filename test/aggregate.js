@@ -68,10 +68,12 @@ if ('AggregateError' in globalThis) {
     t.deepEqual(errorA.errors, errors)
   })
 } else {
-  test('Plain-objects AggregateError work in older environments', (t) => {
-    const name = 'AggregateError'
-    const errorA = normalizeException({ name, message: 'test' })
-    t.is(errorA.name, name)
+  test('Plain-objects AggregateError do not work in older environments', (t) => {
+    const errorA = normalizeException({
+      name: 'AggregateError',
+      message: 'test',
+    })
+    t.is(errorA.name, 'Error')
     t.is(errorA.constructor, Error)
   })
 }
