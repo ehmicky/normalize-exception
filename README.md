@@ -321,6 +321,8 @@ try {
   like it's 2022 🔮
 - [`error-type`](https://github.com/ehmicky/error-type): Create custom error
   types
+- [`error-serializer`](https://github.com/ehmicky/error-serializer): Convert
+  errors to/from plain objects
 - [`merge-error-cause`](https://github.com/ehmicky/merge-error-cause): Merge an
   error with its `cause`
 - [`error-cause-polyfill`](https://github.com/ehmicky/error-cause-polyfill):
