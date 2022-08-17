@@ -330,6 +330,8 @@ try {
   Polyfill `error.cause`
 - [`handle-cli-error`](https://github.com/ehmicky/handle-cli-error): 💣 Error
   handler for CLI applications 💥
+- [`log-process-errors`](https://github.com/ehmicky/log-process-errors): Show
+  some ❤ to Node.js process errors
 
 # Support
 
