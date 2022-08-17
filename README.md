@@ -319,8 +319,9 @@ try {
 
 - [`modern-errors`](https://github.com/ehmicky/modern-errors): Handle errors
   like it's 2022 🔮
-- [`error-type`](https://github.com/ehmicky/error-type): Create custom error
-  types
+- [`create-error-types`](https://github.com/ehmicky/create-error-types): Create
+  multiple error types
+- [`error-type`](https://github.com/ehmicky/error-type): Create one error type
 - [`error-serializer`](https://github.com/ehmicky/error-serializer): Convert
   errors to/from plain objects
 - [`merge-error-cause`](https://github.com/ehmicky/merge-error-cause): Merge an
