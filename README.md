@@ -132,6 +132,21 @@ try {
 }
 ```
 
+## Mismatched constructor
+
+<!-- eslint-disable fp/no-delete -->
+
+```js
+try {
+  const error = new TypeError('message')
+  error.constructor = RangeError
+  throw error
+} catch (error) {
+  console.log(error.constructor) // RangeError
+  console.log(normalizeException(error).constructor) // TypeError
+}
+```
+
 ## Missing stack
 
 <!-- eslint-disable fp/no-delete -->

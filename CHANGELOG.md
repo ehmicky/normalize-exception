@@ -1,3 +1,9 @@
+# 1.9.0
+
+## Features
+
+- Ensure `error.constructor` is the correct one
+
 # 1.8.0
 
 ## Features

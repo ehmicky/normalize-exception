@@ -28,8 +28,16 @@ Object.defineProperty(constructorWithoutName, 'name', { value: false })
 const constructorWithEmptyName = function () {}
 // eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(constructorWithEmptyName, 'name', { value: '' })
+const constructorWithFakeName = function () {}
+// eslint-disable-next-line fp/no-mutating-methods
+Object.defineProperty(constructorWithFakeName, 'name', { value: 'Error' })
 each(
-  ['', constructorWithoutName, constructorWithEmptyName],
+  [
+    '',
+    constructorWithoutName,
+    constructorWithEmptyName,
+    constructorWithFakeName,
+  ],
   ({ title }, errorConstructor) => {
     test(`Plain-objects with errors with wrong constructor | ${title}`, (t) => {
       const message = 'test'

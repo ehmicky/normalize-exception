@@ -66,12 +66,13 @@ const isInvalidError = function (value) {
   return isNonModifiableError(value) || hasInvalidConstructor(value)
 }
 
-// `error.constructor.name` is often used for type checking, so we ensure it
-// is normal
+// `error.constructor` is often used for type checking, so we ensure it
+// is normal.
 const hasInvalidConstructor = function (error) {
   return (
     typeof error.constructor !== 'function' ||
     typeof error.constructor.name !== 'string' ||
-    error.constructor.name === ''
+    error.constructor.name === '' ||
+    error.constructor.prototype !== Object.getPrototypeOf(error)
   )
 }
