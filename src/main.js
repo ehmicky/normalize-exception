@@ -36,7 +36,11 @@ const normalizeProps = function (error, recurse) {
   normalizeDescriptors(error)
 }
 
-// Ensure `error.name` is a string
+// Ensure `error.name` is a string.
+// We do not ensure that `error.name`, `error.__proto__.name` and
+// `error.constructor.name` match
+//  - Although this is best practice, this is often not the case and changing
+//    it might break some logic
 const normalizeName = function (error) {
   if (isDefinedString(error.name)) {
     return

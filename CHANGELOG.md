@@ -1,3 +1,9 @@
+# 2.4.0
+
+## Features
+
+- Improve `error.name` normalization
+
 # 2.3.2
 
 ## Bug fixes
