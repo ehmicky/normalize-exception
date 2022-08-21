@@ -66,9 +66,10 @@ type DefinedString<Value, DefaultValue> = Value extends string
 export default function normalizeException<ErrorArg>(
   error: ErrorArg,
   options?: Options,
-): ErrorArg extends Error
-  ? Error & {
-      name: DefinedString<ErrorArg['name'], Error['constructor']['name']>
-      message: DefinedString<ErrorArg['message'], ''>
-    }
-  : Error
+): Error &
+  (ErrorArg extends Error
+    ? {
+        name: DefinedString<ErrorArg['name'], Error['constructor']['name']>
+        message: DefinedString<ErrorArg['message'], ''>
+      }
+    : unknown)
