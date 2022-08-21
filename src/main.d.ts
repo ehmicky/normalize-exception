@@ -18,7 +18,7 @@ type DefinedString<Value, DefaultValue> = Value extends string
     : Value
   : DefaultValue
 
-type NormalizedError<ErrorArg, OptionsArg extends Options> = Error &
+type NormalizedError<ErrorArg> = Error &
   (ErrorArg extends Error
     ? {
         name: DefinedString<ErrorArg['name'], Error['constructor']['name']>
@@ -75,4 +75,4 @@ type NormalizedError<ErrorArg, OptionsArg extends Options> = Error &
 export default function normalizeException<ErrorArg>(
   error: ErrorArg,
   options?: Options,
-): NormalizedError<ErrorArg, Options>
+): NormalizedError<ErrorArg>
