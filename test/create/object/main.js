@@ -11,7 +11,7 @@ test('Plain-objects errors can have names', (t) => {
   t.true(error instanceof Error)
 })
 
-test('Plain-objects errors can re-use native error types', (t) => {
+test('Plain-objects errors can re-use native error classes', (t) => {
   const name = 'TypeError'
   const error = normalizeException({ name })
   t.is(error.name, name)
