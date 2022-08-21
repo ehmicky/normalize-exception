@@ -1,3 +1,10 @@
+# 2.2.0
+
+## Features
+
+- Add [`shallow` option](README.md#shallow) to prevent recursing on
+  `error.cause` and `error.errors`
+
 # 2.1.0
 
 ## Features

@@ -47,9 +47,10 @@ not `require()`.
 
 # API
 
-## normalizeException(error)
+## normalizeException(error, options?)
 
 `error` `any`\
+`options` [`Options`](#options)\
 _Return value_: `Error`
 
 `normalizeException()` never throws.
@@ -58,6 +59,21 @@ If `error` is an `Error` instance, it is returned. Any missing or invalid error
 property is directly modified.
 
 If it is not an `Error` instance, a new one is created and returned.
+
+### Options
+
+Options are an optional object with the following properties.
+
+#### shallow
+
+_Type_: `boolean`\
+_Default_: `false`
+
+Unless `true`,
+[`error.cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause)
+and
+[`error.errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)
+are normalized [recursively](#recursion), when present.
 
 # Features
 
