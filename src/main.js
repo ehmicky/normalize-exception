@@ -5,21 +5,26 @@ import { setErrorProperty, normalizeDescriptors } from './descriptors.js'
 import { setStack } from './stack.js'
 
 // Ensure an exception is an Error instance with normal properties
-export default function normalizeException(error) {
-  return recurseException(error, [])
+export default function normalizeException(error, { shallow = false } = {}) {
+  return recurseException(error, [], shallow)
 }
 
-const recurseException = function (error, parents) {
+const recurseException = function (error, parents, shallow) {
   if (parents.includes(error)) {
     return
   }
 
-  const recurse = (innerError) =>
-    recurseException(innerError, [...parents, error])
+  const recurse = shallow
+    ? identity
+    : (innerError) => recurseException(innerError, [...parents, error], shallow)
 
   const errorA = createError(error)
   normalizeProps(errorA, recurse)
   return errorA
+}
+
+const identity = function (error) {
+  return error
 }
 
 const normalizeProps = function (error, recurse) {
