@@ -16,7 +16,7 @@ export const setStack = function (error) {
 // `error.stack` can be `undefined` in edge case, e.g. overridden `Error`
 // global object or deleting `Error.stackTraceLimit`.
 const getStack = function (message = '', name = 'Error') {
-  const StackError = getErrorType(name)
+  const StackError = getErrorClass(name)
   const { stack } = new StackError(message)
   return stack === undefined || stack === ''
     ? `${name}: ${message}`
@@ -24,7 +24,7 @@ const getStack = function (message = '', name = 'Error') {
 }
 
 // Creates a temporary error class to ensure the `name` is present in the stack
-const getErrorType = function (name) {
+const getErrorClass = function (name) {
   // eslint-disable-next-line fp/no-class
   class StackError extends Error {}
   const descriptor = {
