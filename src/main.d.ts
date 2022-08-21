@@ -1,3 +1,17 @@
+/**
+ * `normalize-exception` options
+ */
+export interface Options {
+  /**
+   * Unless `true`,
+   * [`error.cause`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/cause)
+   * and
+   * [`error.errors`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)
+   * are normalized recursively, when present.
+   */
+  readonly shallow?: boolean
+}
+
 type DefinedString<Value, DefaultValue> = Value extends string
   ? Value extends ''
     ? DefaultValue
@@ -51,6 +65,7 @@ type DefinedString<Value, DefaultValue> = Value extends string
  */
 export default function normalizeException<ErrorArg>(
   error: ErrorArg,
+  options?: Options,
 ): ErrorArg extends Error
   ? Error & {
       name: DefinedString<ErrorArg['name'], Error['constructor']['name']>
