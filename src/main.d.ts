@@ -25,19 +25,15 @@ type NormalizedError<ErrorArg, OptionsArg extends Options> = Error &
         message: DefinedString<ErrorArg['message'], ''>
         stack: DefinedString<ErrorArg['stack'], string>
       }
-    : unknown) &
-  ('cause' extends keyof ErrorArg
-    ? {
-        cause: ErrorArg['cause'] extends undefined
-          ? undefined
-          : NormalizedError<ErrorArg['cause'], OptionsArg>
-      }
-    : {}) &
-  ('errors' extends keyof ErrorArg
-    ? ErrorArg['errors'] extends any[]
-      ? { errors: NormalizedError<ErrorArg['errors'][number], OptionsArg>[] }
-      : {}
-    : {})
+    : unknown) & {
+    [Cause in 'cause' & keyof ErrorArg]: ErrorArg[Cause] extends undefined
+      ? undefined
+      : NormalizedError<ErrorArg[Cause], OptionsArg>
+  } & {
+    [Errors in 'errors' & keyof ErrorArg]: ErrorArg[Errors] extends any[]
+      ? NormalizedError<ErrorArg[Errors][number], OptionsArg>[]
+      : Error[] | undefined
+  }
 
 /**
  * Normalize exception/error.
