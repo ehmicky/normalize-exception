@@ -4,8 +4,13 @@ import { setErrorProperty } from './descriptors.js'
 // Skip `error.cause` if infinitely recursive.
 // `new Error('message', { cause: undefined })` can happen either because:
 //  - the inner error was `undefined`
-//  - the cause was optional
-// We interpret in the second way, which might be more common.
+//  - the cause was optional, or intentionally set to `undefined` to mean
+//    "no cause"
+// We interpret in the second way:
+//  - This is more common.
+//  - `undefined` exceptions have no stack trace nor message, so not very
+//    useful anyway, except to indicate that an `undefined` value was thrown
+//    from somewhere else
 export const normalizeCause = function (error, recurse) {
   if (!('cause' in error)) {
     return
