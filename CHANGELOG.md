@@ -1,3 +1,9 @@
+# 2.3.1
+
+## Bug fixes
+
+- Fix TypeScript types
+
 # 2.3.0
 
 ## Features
