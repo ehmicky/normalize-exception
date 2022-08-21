@@ -25,22 +25,3 @@ expectType<'stack'>(
   normalizeException(error as Error & { stack: 'stack' }).stack,
 )
 expectType<string>(normalizeException(error as Error & { stack: '' }).stack)
-
-expectAssignable<Error>(
-  normalizeException(error as Error & { cause: true }).cause,
-)
-expectType<undefined>(
-  normalizeException(error as unknown as Error & { cause: undefined }).cause,
-)
-expectAssignable<Error>(
-  normalizeException(error as Error & { cause: Error & { cause: true } }).cause
-    .cause,
-)
-
-expectAssignable<Error>(
-  normalizeException(error as Error & { errors: [true] }).errors[0]!,
-)
-expectAssignable<Error>(
-  normalizeException(error as Error & { errors: [Error & { errors: [true] }] })
-    .errors[0]!.errors[0]!,
-)
