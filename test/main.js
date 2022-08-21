@@ -55,8 +55,30 @@ test.serial('Fix invalid error.name without constructor names', (t) => {
   Object.defineProperty(TypeError, 'name', { value: 'TypeError' })
 })
 
-test('Fix error.name not matching constructor names', (t) => {
+test('Does not fix error.name not matching constructor names', (t) => {
   const error = new TypeError('test')
   error.name = 'Error'
-  t.is(normalizeException(error).name, 'TypeError')
+  t.is(normalizeException(error).name, 'Error')
+})
+
+// eslint-disable-next-line fp/no-class
+class TestError extends Error {}
+// eslint-disable-next-line fp/no-mutation
+TestError.prototype.name = 'OtherError'
+
+test('Prefer prototype.name over constructor.name', (t) => {
+  const error = new TestError('test')
+  error.name = ''
+  t.is(normalizeException(error).name, 'OtherError')
+})
+
+// eslint-disable-next-line fp/no-class
+class InvalidError extends Error {}
+// eslint-disable-next-line fp/no-mutation
+InvalidError.prototype.name = ''
+
+test('Fallback to constructor.name', (t) => {
+  const error = new InvalidError('test')
+  error.name = ''
+  t.is(normalizeException(error).name, 'InvalidError')
 })

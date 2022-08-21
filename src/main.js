@@ -38,9 +38,15 @@ const normalizeProps = function (error, recurse) {
 
 // Ensure `error.name` is a string
 const normalizeName = function (error) {
-  if (error.name !== error.constructor.name) {
-    setErrorProperty(error, 'name', error.constructor.name)
+  if (isDefinedString(error.name)) {
+    return
   }
+
+  const prototypeName = Object.getPrototypeOf(error).name
+  const name = isDefinedString(prototypeName)
+    ? prototypeName
+    : error.constructor.name
+  setErrorProperty(error, 'name', name)
 }
 
 // Ensure `error.message` is a string
