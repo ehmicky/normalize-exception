@@ -1,6 +1,6 @@
 {
   "name": "normalize-exception",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "type": "module",
   "exports": "./build/src/main.js",
   "main": "./build/src/main.js",
