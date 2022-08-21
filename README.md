@@ -7,10 +7,10 @@
 Normalize:
 
 - Exceptions that are [not `Error` instances](#invalid-type)
-- Error properties (`name`, `message`, `stack`) that are
+- Error properties (`name`, `message`, `stack`, `constructor`) that are
   [missing](#missing-properties), [invalid](#invalid-properties),
-  [cached](#cached-stack), [enumerable](#enumerable-properties),
-  [readonly](#readonly-properties), [non-writable](#non-writable-properties),
+  [enumerable](#enumerable-properties), [readonly](#readonly-properties),
+  [non-writable](#non-writable-properties),
   [non-configurable](#non-configurable-properties),
   [non-extensible](#non-extensible-error), [proxied](#proxies) or
   [throwing](#throwing-properties)
@@ -172,19 +172,6 @@ try {
 } catch (error) {
   console.log(typeof error.message) // 'boolean'
   console.log(typeof normalizeException(error).message) // 'string'
-}
-```
-
-## Cached stack
-
-```js
-try {
-  throw new Error('message')
-} catch (error) {
-  console.log(error.stack) // Error: message
-  error.message += ' other' // `error.stack` is cached, so it does not update
-  console.log(error.stack) // Error: message
-  console.log(normalizeException(error).stack) // Error: message other
 }
 ```
 

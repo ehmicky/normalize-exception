@@ -1,3 +1,9 @@
+# 2.0.0
+
+## Breaking changes
+
+- Ensure `error.stack` normalization works in any browser
+
 # 1.9.0
 
 ## Features

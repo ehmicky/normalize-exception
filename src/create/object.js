@@ -1,5 +1,5 @@
 import { setErrorProperty } from '../descriptors.js'
-import { setFullStack } from '../stack.js'
+import { setStack } from '../stack.js'
 
 import { copyObject } from './copy.js'
 
@@ -20,7 +20,7 @@ export const objectifyError = function (object) {
   )
 
   if (stack === undefined) {
-    setFullStack(error)
+    setStack(error)
   }
 
   return error

@@ -12,7 +12,9 @@ test('New stack is not enumerable', (t) => {
 })
 
 test('New stack includes name and message', (t) => {
-  t.true(normalizeException().stack.includes('Error: undefined'))
+  const { name, message, stack } = normalizeException()
+  t.true(stack.includes(name))
+  t.true(stack.includes(message))
 })
 
 test('New stack does not include internal code', (t) => {
@@ -69,3 +71,10 @@ test.serial(
     Error.stackTraceLimit = stackTraceLimit
   },
 )
+
+test('Keeps prefixed header in error.stack', (t) => {
+  const error = new TypeError('test')
+  const stack = `Test\n${error.stack}`
+  error.stack = stack
+  t.is(normalizeException(error).stack, stack)
+})

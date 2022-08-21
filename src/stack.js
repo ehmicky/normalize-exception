@@ -1,24 +1,13 @@
 import { setErrorProperty } from './descriptors.js'
 
-// Ensure `error.stack` reflects `error.name` and `error.message`
-// Also create stack trace if missing.
-export const setFullStack = function (error) {
+// Create stack trace if missing.
+// We do not try to fix `error.stack`, e.g. to ensure it contains `error.name`
+// and `error.message` since:
+//  - `error.stack` is not standard and differs between engines
+//  - `error.stack` is often instrumented
+//     - e.g. `--enable-source-maps` CLI flag with Node.js adds inline previews
+export const setStack = function (error) {
   const stack = [getStackHeader(error), ...getStackTrace()].join('\n')
-  setErrorProperty(error, 'stack', stack)
-}
-
-// Ensure `error.stack` reflects `error.name` and `error.message`
-export const fixStack = function (error) {
-  const header = getStackHeader(error)
-
-  if (error.stack.includes(header)) {
-    return
-  }
-
-  const lines = error.stack.split('\n')
-  const index = lines.findIndex(isStackLine)
-  const linesA = index === -1 ? getStackTrace() : lines.slice(index)
-  const stack = [header, ...linesA].join('\n')
   setErrorProperty(error, 'stack', stack)
 }
 
@@ -28,12 +17,6 @@ export const fixStack = function (error) {
 const getStackHeader = function (error) {
   return `${error.name}: ${error.message}`
 }
-
-const isStackLine = function (line) {
-  return STACK_LINE_REGEXP.test(line)
-}
-
-const STACK_LINE_REGEXP = /^\s*at /u
 
 // Generate a new stack trace
 // `error.stack` can be `undefined` in edge case, e.g. overridden `Error`

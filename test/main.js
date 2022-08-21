@@ -60,28 +60,3 @@ test('Fix error.name not matching constructor names', (t) => {
   error.name = 'Error'
   t.is(normalizeException(error).name, 'TypeError')
 })
-
-test('Fix invalid error.stack with wrong header', (t) => {
-  const error = new TypeError('test')
-  const lines = error.stack.split('\n')
-  const lastStackLine = lines[lines.length - 1]
-  const value = 'anything'
-  error.message = value
-  const errorA = normalizeException(error)
-  t.true(errorA.stack.includes(value))
-  t.true(errorA.stack.endsWith(lastStackLine))
-})
-
-test('Does not fix error.stack with a prefixed header', (t) => {
-  const error = new TypeError('test')
-  const newStack = `Test\n${error.stack}`
-  error.stack = newStack
-  const errorA = normalizeException(error)
-  t.is(errorA.stack, newStack)
-})
-
-test('Fix invalid error.stack with no stack lines', (t) => {
-  const error = new TypeError('test')
-  error.stack = 'test'
-  t.true(normalizeException(error).stack.includes('at '))
-})
