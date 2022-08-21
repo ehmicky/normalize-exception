@@ -40,7 +40,7 @@ each([undefined, true, ''], ({ title }, value) => {
   test(`Fix invalid error.stack | ${title}`, (t) => {
     const error = new Error('test')
     error.stack = value
-    t.true(normalizeException(error).stack.includes('at '))
+    t.true(normalizeException(error).stack.includes('test'))
     t.false(isEnum.call(error, 'stack'))
   })
 })

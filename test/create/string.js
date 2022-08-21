@@ -23,6 +23,8 @@ each(
       t.true(error instanceof Error)
       const message = String(exception)
       t.is(error.message, message)
+      t.true(error.stack.includes('Error'))
+      t.true(error.stack.includes(message))
     })
   },
 )

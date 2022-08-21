@@ -27,7 +27,15 @@ test('Plain-objects errors can have stacks', (t) => {
 })
 
 test('Plain-objects errors without stacks get one', (t) => {
-  t.true(normalizeException({}).stack.includes('at '))
+  const { stack } = normalizeException({})
+  t.true(stack.includes('Error'))
+  t.true(stack.includes('{}'))
+})
+
+test('Plain-objects errors without stacks get one based on object', (t) => {
+  const { stack } = normalizeException({ name: 'TypeError', message: 'test' })
+  t.true(stack.includes('TypeError'))
+  t.true(stack.includes('test'))
 })
 
 test('Plain-objects errors can have causes', (t) => {
