@@ -18,6 +18,27 @@ type DefinedString<Value, DefaultValue> = Value extends string
     : Value
   : DefaultValue
 
+type NormalizedError<ErrorArg, OptionsArg extends Options> = Error &
+  (ErrorArg extends Error
+    ? {
+        name: DefinedString<ErrorArg['name'], Error['constructor']['name']>
+        message: DefinedString<ErrorArg['message'], ''>
+        stack: DefinedString<ErrorArg['stack'], string>
+      }
+    : unknown) &
+  ('cause' extends keyof ErrorArg
+    ? {
+        cause: ErrorArg['cause'] extends undefined
+          ? undefined
+          : NormalizedError<ErrorArg['cause'], OptionsArg>
+      }
+    : {}) &
+  ('errors' extends keyof ErrorArg
+    ? ErrorArg['errors'] extends any[]
+      ? { errors: NormalizedError<ErrorArg['errors'][number], OptionsArg>[] }
+      : {}
+    : {})
+
 /**
  * Normalize exception/error.
  *
@@ -66,10 +87,4 @@ type DefinedString<Value, DefaultValue> = Value extends string
 export default function normalizeException<ErrorArg>(
   error: ErrorArg,
   options?: Options,
-): Error &
-  (ErrorArg extends Error
-    ? {
-        name: DefinedString<ErrorArg['name'], Error['constructor']['name']>
-        message: DefinedString<ErrorArg['message'], ''>
-      }
-    : unknown)
+): NormalizedError<ErrorArg, Options>

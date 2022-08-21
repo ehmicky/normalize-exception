@@ -2,24 +2,45 @@ import { expectAssignable, expectType, expectError } from 'tsd'
 
 import normalizeException from './main.js'
 
-expectAssignable<Error>(new Error('test'))
+const error = new Error('test')
+expectAssignable<Error>(error)
 normalizeException(undefined)
 normalizeException('test')
 normalizeException('test', {})
 normalizeException('test', { shallow: true })
 
 expectError(normalizeException())
-expectError(normalizeException(new Error('test'), { unknown: true }))
-expectError(normalizeException(new Error('test'), { shallow: 'true' }))
+expectError(normalizeException(error, { unknown: true }))
+expectError(normalizeException(error, { shallow: 'true' }))
 
-const { name, message } = normalizeException(
-  new TypeError('test') as TypeError & { name: 'TypeError'; message: 'test' },
+expectType<'TypeError'>(
+  normalizeException(error as Error & { name: 'TypeError' }).name,
 )
-expectType<'TypeError'>(name)
-expectType<'test'>(message)
+expectType<string>(normalizeException(error as Error & { name: '' }).name)
+expectType<'test'>(
+  normalizeException(error as Error & { message: 'test' }).message,
+)
+expectType<''>(normalizeException(error as Error & { message: '' }).message)
+expectType<'stack'>(
+  normalizeException(error as Error & { stack: 'stack' }).stack,
+)
+expectType<string>(normalizeException(error as Error & { stack: '' }).stack)
 
-const { name: nameA, message: messageA } = normalizeException(
-  new TypeError('test') as TypeError & { name: ''; message: '' },
+expectAssignable<Error>(
+  normalizeException(error as Error & { cause: true }).cause,
 )
-expectType<string>(nameA)
-expectType<''>(messageA)
+expectType<undefined>(
+  normalizeException(error as unknown as Error & { cause: undefined }).cause,
+)
+expectAssignable<Error>(
+  normalizeException(error as Error & { cause: Error & { cause: true } }).cause
+    .cause,
+)
+
+expectAssignable<Error>(
+  normalizeException(error as Error & { errors: [true] }).errors[0]!,
+)
+expectAssignable<Error>(
+  normalizeException(error as Error & { errors: [Error & { errors: [true] }] })
+    .errors[0]!.errors[0]!,
+)

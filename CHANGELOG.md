@@ -1,3 +1,9 @@
+# 2.3.0
+
+## Features
+
+- Improve TypeScript types
+
 # 2.2.0
 
 ## Features
