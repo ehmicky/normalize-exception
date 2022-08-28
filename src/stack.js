@@ -15,12 +15,12 @@ export const setStack = function (error) {
 // Does not assume `error.stack` format.
 // `error.stack` can be `undefined` in edge case, e.g. overridden `Error`
 // global object or deleting `Error.stackTraceLimit`.
+// We do not remove stack lines of `normalize-exception` itself, as it helps
+// users understand where the error was created.
 const getStack = function (message = '', name = 'Error') {
   const StackError = getErrorClass(name)
   const { stack } = new StackError(message)
-  return stack === undefined || stack === ''
-    ? `${name}: ${message}`
-    : stack.split('\n').filter(isNotInternalLine).join('\n')
+  return stack === undefined || stack === '' ? `${name}: ${message}` : stack
 }
 
 // Creates a temporary error class to ensure the `name` is present in the stack
@@ -39,12 +39,3 @@ const getErrorClass = function (name) {
   Object.defineProperty(StackError.prototype, 'name', descriptor)
   return StackError
 }
-
-const isNotInternalLine = function (line) {
-  return !line.includes(INTERNAL_LINE)
-}
-
-// How the top-level function appears in a stack trace.
-// Since stack traces are implementation-specific, we must be very conservative
-// and careful.
-const INTERNAL_LINE = 'normalize-exception'

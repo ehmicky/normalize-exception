@@ -1,3 +1,9 @@
+# 2.5.0
+
+## Features
+
+- Improve generation of `error.stack` when missing
+
 # 2.4.0
 
 ## Features

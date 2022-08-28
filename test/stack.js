@@ -17,9 +17,9 @@ test('New stack includes name and message', (t) => {
   t.true(stack.includes(message))
 })
 
-test('New stack does not include internal code', (t) => {
+test('New stack includes internal code', (t) => {
   const { stack } = normalizeException()
-  t.false(stack.includes('normalize-exception'))
+  t.true(stack.includes('normalize-exception'))
 })
 
 test.serial('New stack with prepareStackTrace()', (t) => {
