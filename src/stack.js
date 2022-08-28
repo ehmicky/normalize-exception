@@ -29,7 +29,7 @@ const getErrorClass = function (name) {
   class StackError extends Error {}
   const descriptor = {
     value: name,
-    enumerable: true,
+    enumerable: false,
     writable: true,
     configurable: true,
   }
