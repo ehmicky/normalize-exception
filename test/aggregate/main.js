@@ -47,13 +47,10 @@ each([true, false], ({ title }, shallow) => {
   } else {
     test(`Plain-objects AggregateError do not work in older environments | ${title}`, (t) => {
       const errorA = normalizeException(
-        {
-          name: 'AggregateError',
-          message: 'test',
-        },
+        { name: 'AggregateError', message: 'test' },
         { shallow },
       )
-      t.is(errorA.name, 'Error')
+      t.is(errorA.name, 'AggregateError')
       t.is(errorA.constructor, Error)
     })
   }
