@@ -27,9 +27,10 @@ const getStack = function (message = '', name = 'Error') {
 }
 
 // Creates a temporary error class to ensure the `name` is present in the stack
+// SpiderMonkey includes the constructor in `error.stack`.
+//  - Also it uses the constructor `Function.name` at function creation time
+//  - This requires creating an anonymous class and not assigning to a variable
 const getErrorClass = function (name) {
-  // eslint-disable-next-line fp/no-class
-  class StackError extends Error {}
   const descriptor = {
     value: name,
     enumerable: false,
@@ -37,7 +38,11 @@ const getErrorClass = function (name) {
     configurable: true,
   }
   // eslint-disable-next-line fp/no-mutating-methods
-  Object.defineProperty(StackError, 'name', descriptor)
+  const StackError = Object.defineProperty(
+    class extends Error {},
+    'name',
+    descriptor,
+  )
   // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(StackError.prototype, 'name', descriptor)
   return StackError
