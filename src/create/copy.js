@@ -32,7 +32,8 @@ export const copyObject = function (object) {
 }
 
 // Exclude inherited properties except for core error properties, since
-// `error.name` is often inherited.
+// `error.name` is often inherited. Also `error.stack` is inherited on
+// SpiderMonkey.
 // Exclude non-enumerable properties except for core error properties.
 const getPropsToCopy = function (object) {
   const propNames = getOwnKeys(object)

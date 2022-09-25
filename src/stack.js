@@ -6,6 +6,9 @@ import { setErrorProperty } from './descriptors.js'
 //  - `error.stack` is not standard and differs between engines
 //  - `error.stack` is often instrumented
 //     - e.g. `--enable-source-maps` CLI flag with Node.js adds inline previews
+// On SpiderMonkey:
+//  - `error.stack` is an inherited getter function
+//  - The following shadows it with an own property
 export const setStack = function (error) {
   const stack = getStack(error.message, error.name)
   setErrorProperty(error, 'stack', stack)
