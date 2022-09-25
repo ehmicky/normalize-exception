@@ -1,3 +1,9 @@
+# 2.5.2
+
+## Bug fixes
+
+- Improve missing `error.stack` support in SpiderMonkey
+
 # 2.5.1
 
 ## Bug fixes
