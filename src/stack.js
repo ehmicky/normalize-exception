@@ -23,7 +23,9 @@ export const setStack = function (error) {
 const getStack = function (message = '', name = 'Error') {
   const StackError = getErrorClass(name)
   const { stack } = new StackError(message)
-  return stack === undefined || stack === '' ? `${name}: ${message}` : stack
+  return typeof stack === 'string' && stack !== ''
+    ? stack
+    : `${name}: ${message}`
 }
 
 // Creates a temporary error class to ensure the `name` is present in the stack

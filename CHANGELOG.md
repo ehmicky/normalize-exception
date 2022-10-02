@@ -1,3 +1,9 @@
+# 2.6.0
+
+## Features
+
+- Ensure `error.stack` is always a string
+
 # 2.5.2
 
 ## Bug fixes

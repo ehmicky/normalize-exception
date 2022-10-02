@@ -39,6 +39,14 @@ test.serial('New stack with prepareStackTrace() empty', (t) => {
   delete Error.prepareStackTrace
 })
 
+test.serial('New stack with prepareStackTrace() not a string', (t) => {
+  // eslint-disable-next-line fp/no-mutation
+  Error.prepareStackTrace = () => true
+  t.is(normalizeException('test').stack, 'Error: test')
+  // eslint-disable-next-line fp/no-delete
+  delete Error.prepareStackTrace
+})
+
 test.serial('New stack with stackTraceLimit 0', (t) => {
   const { stackTraceLimit } = Error
   // eslint-disable-next-line fp/no-mutation
