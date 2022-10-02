@@ -5,11 +5,9 @@ import { each } from 'test-each'
 each(
   [
     undefined,
-    // eslint-disable-next-line unicorn/no-null
     null,
     true,
     0,
-    // eslint-disable-next-line no-magic-numbers
     0n,
     '',
     'test',
