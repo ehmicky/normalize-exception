@@ -53,6 +53,7 @@
     "node": ">=14.18.0"
   },
   "dependencies": {
+    "is-error-instance": "^1.1.0",
     "is-plain-obj": "^4.1.0"
   }
 }

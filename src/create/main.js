@@ -1,3 +1,4 @@
+import isErrorInstance from 'is-error-instance'
 import isPlainObj from 'is-plain-obj'
 
 import { isNonModifiableError } from './modifiable.js'
@@ -12,8 +13,8 @@ export const createError = function (value) {
     return objectifyError(value)
   }
 
-  if (!isError(value)) {
-    return handleNonError(value)
+  if (!isErrorInstance(value)) {
+    return stringifyError(value)
   }
 
   if (isInvalidError(value)) {
@@ -32,38 +33,23 @@ const isErrorPlainObj = function (value) {
   }
 }
 
-// Unlike `instanceof Error`, this works cross-realm,
-// e.g. `vm.runInNewContext('Error')`.
-// Handle hooks exceptions when `value` is a Proxy.
-const isError = function (value) {
-  try {
-    return (
-      objectToString.call(value) === '[object Error]' &&
-      !(Symbol.toStringTag in value)
-    )
-  } catch {
-    return false
-  }
-}
-
-const handleNonError = function (value) {
-  return isProxy(value) ? objectifyError(value) : stringifyError(value)
+const isInvalidError = function (value) {
+  return (
+    isProxy(value) ||
+    isNonModifiableError(value) ||
+    hasInvalidConstructor(value)
+  )
 }
 
 // Proxies of Errors are converted to non-proxies.
 // This can only work within the same realm, because the only way to detect
 // proxies is combining `Object.prototype.toString()` and `instanceof`.
-// Handle hooks exceptions when `value` is a Proxy.
 const isProxy = function (value) {
   try {
-    return value instanceof Error
+    return objectToString.call(value) === '[object Object]'
   } catch {
     return true
   }
-}
-
-const isInvalidError = function (value) {
-  return isNonModifiableError(value) || hasInvalidConstructor(value)
 }
 
 // `error.constructor` is often used for type checking, so we ensure it

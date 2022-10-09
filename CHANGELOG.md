@@ -1,3 +1,9 @@
+# 2.7.0
+
+## Features
+
+- Improve error detection
+
 # 2.6.0
 
 ## Features

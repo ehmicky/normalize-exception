@@ -13,15 +13,6 @@ test('Plain-objects errors work cross-realm', (t) => {
   t.true(error instanceof TypeError)
 })
 
-test('Plain-objects with toString tag', (t) => {
-  const error = normalizeException({
-    [Symbol.toStringTag]: 'Error',
-    message: 'test',
-  })
-  t.is(error.message, '[object Error]')
-  t.true(error instanceof Error)
-})
-
 const constructorWithoutName = function () {}
 // eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(constructorWithoutName, 'name', { value: false })
