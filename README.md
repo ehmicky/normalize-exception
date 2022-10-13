@@ -360,6 +360,8 @@ try {
   errors to/from plain objects
 - [`merge-error-cause`](https://github.com/ehmicky/merge-error-cause): Merge an
   error with its `cause`
+- [`is-error-instance`](https://github.com/ehmicky/is-error-instance): Check if
+  a value is an `Error` instance
 - [`set-error-class`](https://github.com/ehmicky/set-error-class): Properly
   update an error's class
 - [`set-error-message`](https://github.com/ehmicky/set-error-message): Properly
