@@ -1,3 +1,7 @@
+# 2.8.0
+
+- Switch to MIT license
+
 # 2.7.0
 
 ## Features
