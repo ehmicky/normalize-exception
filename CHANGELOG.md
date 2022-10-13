@@ -1,3 +1,9 @@
+# 2.8.1
+
+## Bug fixes
+
+- Fix `package.json`
+
 # 2.8.0
 
 - Switch to MIT license

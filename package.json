@@ -34,7 +34,7 @@
     "normalization",
     "exceptions"
   ],
-  "license": "Apache-2.0",
+  "license": "MIT",
   "homepage": "https://www.github.com/ehmicky/normalize-exception",
   "repository": "ehmicky/normalize-exception",
   "bugs": {
