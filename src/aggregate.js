@@ -15,8 +15,7 @@ export const normalizeAggregate = function (error, recurse) {
   } else if (isAggregateError(error)) {
     setErrorProperty(error, 'errors', [])
   } else if (error.errors !== undefined) {
-    // eslint-disable-next-line fp/no-delete
-    delete error.errors
+    deleteAggregateErrors(error)
   }
 }
 
@@ -29,4 +28,13 @@ const isAggregateError = function (error) {
     'AggregateError' in globalThis &&
     (error.name === 'AggregateError' || error instanceof AggregateError)
   )
+}
+
+const deleteAggregateErrors = function (error) {
+  // eslint-disable-next-line fp/no-delete
+  delete error.errors
+
+  if (error.errors !== undefined) {
+    setErrorProperty(error, 'errors', [])
+  }
 }

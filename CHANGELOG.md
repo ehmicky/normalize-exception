@@ -1,3 +1,9 @@
+# 2.9.0
+
+## Features
+
+- Normalize invalid `errors` property even when it is inherited
+
 # 2.8.1
 
 ## Bug fixes

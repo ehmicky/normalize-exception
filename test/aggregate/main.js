@@ -31,6 +31,17 @@ each([true, false], ({ title }, shallow) => {
       t.deepEqual(normalizeException(error, { shallow }).errors, [])
     })
 
+    test(`Add missing error.errors to AggregateError even if inherited | ${title}`, (t) => {
+      // eslint-disable-next-line fp/no-class
+      class ChildError extends Error {}
+      // eslint-disable-next-line fp/no-mutation
+      ChildError.prototype.errors = ''
+      const error = new ChildError('test')
+      t.is(error.errors, '')
+      const errorA = normalizeException(error, { shallow })
+      t.deepEqual(errorA.errors, [])
+    })
+
     test(`Fix invalid error.errors to AggregateError | ${title}`, (t) => {
       const error = new AggregateError([], 'test')
       error.errors = new Error('test')
