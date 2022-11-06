@@ -122,30 +122,13 @@ try {
 
 ## Missing properties
 
-<!-- eslint-disable fp/no-delete -->
-
 ```js
 try {
   const error = new TypeError('message')
-  delete error.name
+  error.name = undefined
   throw error
 } catch (error) {
   console.log(error.name) // undefined
-  console.log(normalizeException(error).name) // 'TypeError'
-}
-```
-
-## Mismatched name
-
-<!-- eslint-disable fp/no-delete -->
-
-```js
-try {
-  const error = new TypeError('message')
-  error.name = 'RangeError'
-  throw error
-} catch (error) {
-  console.log(error.name) // 'RangeError'
   console.log(normalizeException(error).name) // 'TypeError'
 }
 ```
@@ -167,12 +150,10 @@ try {
 
 ## Missing stack
 
-<!-- eslint-disable fp/no-delete -->
-
 ```js
 try {
   const error = new Error('message')
-  delete error.stack
+  error.stack = undefined
   throw error
 } catch (error) {
   console.log(error.stack) // undefined
@@ -209,7 +190,7 @@ class ExampleError extends Error {
 try {
   throw new ExampleError('message')
 } catch (error) {
-  console.log({ ...error }) // { name: 'Error' }
+  console.log({ ...error }) // { name: 'ExampleError' }
   console.log({ ...normalizeException(error) }) // {}
 }
 ```
