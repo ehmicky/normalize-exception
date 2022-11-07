@@ -1,6 +1,6 @@
 import { expectAssignable, expectType, expectError } from 'tsd'
 
-import normalizeException from './main.js'
+import normalizeException from 'normalize-exception'
 
 const error = new Error('test')
 expectAssignable<Error>(error)
