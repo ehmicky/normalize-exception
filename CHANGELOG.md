@@ -1,3 +1,9 @@
+# 2.11.0
+
+## Features
+
+- Improve tree-shaking support
+
 # 2.10.0
 
 ## Features
