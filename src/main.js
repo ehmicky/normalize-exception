@@ -1,4 +1,4 @@
-import { normalizeAggregate } from './aggregate.js'
+import { normalizeAggregate } from './aggregate/main.js'
 import { normalizeCause } from './cause.js'
 import { createError } from './create/main.js'
 import { setErrorProperty, normalizeDescriptors } from './descriptors.js'

@@ -2,7 +2,7 @@ import isErrorInstance from 'is-error-instance'
 import isPlainObj from 'is-plain-obj'
 
 import { isNonModifiableError } from './modifiable.js'
-import { objectifyError } from './object.js'
+import { objectifyError } from './object/main.js'
 import { stringifyError } from './string.js'
 
 const { toString: objectToString } = Object.prototype
