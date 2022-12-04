@@ -1,4 +1,4 @@
-import { setErrorProperty } from '../descriptors.js'
+import { setErrorProperty } from './descriptors.js'
 
 // Recurse over `error.errors`.
 // Also ensure `AggregateError` instance have an `errors` property.
