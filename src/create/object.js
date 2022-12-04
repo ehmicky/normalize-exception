@@ -1,6 +1,7 @@
-import { setErrorProperty } from '../../descriptors.js'
-import { setStack } from '../../stack.js'
-import { copyObject } from '../copy.js'
+import { setErrorProperty } from '../descriptors.js'
+import { setStack } from '../stack.js'
+
+import { copyObject } from './copy.js'
 
 // Handle errors that are plain objects instead of Error instances
 export const objectifyError = function (object) {
