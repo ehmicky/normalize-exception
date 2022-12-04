@@ -1,4 +1,4 @@
-import { expectAssignable, expectType, expectError } from 'tsd'
+import { expectAssignable, expectType } from 'tsd'
 
 import normalizeException from 'normalize-exception'
 
@@ -9,9 +9,12 @@ normalizeException('test')
 normalizeException('test', {})
 normalizeException('test', { shallow: true })
 
-expectError(normalizeException())
-expectError(normalizeException(error, { unknown: true }))
-expectError(normalizeException(error, { shallow: 'true' }))
+// @ts-expect-error
+normalizeException()
+// @ts-expect-error
+normalizeException(error, { unknown: true })
+// @ts-expect-error
+normalizeException(error, { shallow: 'true' })
 
 expectType<'TypeError'>(
   normalizeException(error as Error & { name: 'TypeError' }).name,
