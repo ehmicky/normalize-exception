@@ -29,7 +29,7 @@ each(
 
 test('Handle exceptions with invalid toString()', (t) => {
   const exception = Object.create({
-    toString() {
+    toString: () => {
       throw new Error('test')
     },
   })

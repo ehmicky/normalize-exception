@@ -60,11 +60,9 @@ test('Handles readonly getters', (t) => {
   )
 })
 
-const getMessage = function () {
-  return 'testTwo'
-}
+const getMessage = () => 'testTwo'
 
-const setMessage = function () {}
+const setMessage = () => {}
 
 each(
   [

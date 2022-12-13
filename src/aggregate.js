@@ -5,7 +5,7 @@ import { setErrorProperty } from './descriptors.js'
 // Skip `error.errors` that are infinitely recursive.
 // We filter out `undefined` `errors` for the same reason we remove `undefined`
 // `error.cause`.
-export const normalizeAggregate = function (error, recurse) {
+export const normalizeAggregate = (error, recurse) => {
   if (Array.isArray(error.errors)) {
     const aggregateErrors = error.errors
       .filter(isDefined)
@@ -19,18 +19,13 @@ export const normalizeAggregate = function (error, recurse) {
   }
 }
 
-const isDefined = function (error) {
-  return error !== undefined
-}
+const isDefined = (error) => error !== undefined
 
-const isAggregateError = function (error) {
-  return (
-    'AggregateError' in globalThis &&
-    (error.name === 'AggregateError' || error instanceof AggregateError)
-  )
-}
+const isAggregateError = (error) =>
+  'AggregateError' in globalThis &&
+  (error.name === 'AggregateError' || error instanceof AggregateError)
 
-const deleteAggregateErrors = function (error) {
+const deleteAggregateErrors = (error) => {
   // eslint-disable-next-line fp/no-delete
   delete error.errors
 

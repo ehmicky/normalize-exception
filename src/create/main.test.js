@@ -13,13 +13,13 @@ test('Plain-objects errors work cross-realm', (t) => {
   t.true(error instanceof TypeError)
 })
 
-const constructorWithoutName = function () {}
+const constructorWithoutName = () => {}
 // eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(constructorWithoutName, 'name', { value: false })
-const constructorWithEmptyName = function () {}
+const constructorWithEmptyName = () => {}
 // eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(constructorWithEmptyName, 'name', { value: '' })
-const constructorWithFakeName = function () {}
+const constructorWithFakeName = () => {}
 // eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(constructorWithFakeName, 'name', { value: 'Error' })
 each(
@@ -51,7 +51,7 @@ test('Handle proxies', (t) => {
   t.is(error.message, message)
 })
 
-const invalidProxyHook = function () {
+const invalidProxyHook = () => {
   throw new Error('proxyError')
 }
 

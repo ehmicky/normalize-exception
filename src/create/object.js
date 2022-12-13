@@ -4,7 +4,7 @@ import { setStack } from '../stack.js'
 import { copyObject } from './copy.js'
 
 // Handle errors that are plain objects instead of Error instances
-export const objectifyError = function (object) {
+export const objectifyError = (object) => {
   const { name, message, stack, cause, errors, ...objectA } = copyObject(object)
   const messageA = getMessage(message, objectA)
   const error = newError(name, messageA)
@@ -27,13 +27,12 @@ export const objectifyError = function (object) {
 }
 
 // If no `message` property is defined, stringify the object.
-const getMessage = function (message, object) {
-  return typeof message === 'string' && message !== ''
+const getMessage = (message, object) =>
+  typeof message === 'string' && message !== ''
     ? message
     : truncateMessage(safeJsonStringify(object))
-}
 
-const safeJsonStringify = function (object) {
+const safeJsonStringify = (object) => {
   try {
     return JSON.stringify(object)
   } catch {
@@ -41,7 +40,7 @@ const safeJsonStringify = function (object) {
   }
 }
 
-const safeStringify = function (object) {
+const safeStringify = (object) => {
   try {
     return String(object)
   } catch {
@@ -49,15 +48,14 @@ const safeStringify = function (object) {
   }
 }
 
-const truncateMessage = function (message) {
-  return message.length < MESSAGE_MAX_SIZE
+const truncateMessage = (message) =>
+  message.length < MESSAGE_MAX_SIZE
     ? message
     : `${message.slice(0, MESSAGE_MAX_SIZE)}...`
-}
 
 const MESSAGE_MAX_SIZE = 1e3
 
-const newError = function (name, message) {
+const newError = (name, message) => {
   if (name === 'AggregateError' && 'AggregateError' in globalThis) {
     return new AggregateError([], message)
   }
@@ -80,7 +78,7 @@ const NATIVE_ERRORS = {
 }
 
 // We ensure prototype properties are not overridden
-const assignObjectProps = function (error, object) {
+const assignObjectProps = (error, object) => {
   // eslint-disable-next-line fp/no-loops
   for (const propName in object) {
     // eslint-disable-next-line max-depth
@@ -90,7 +88,7 @@ const assignObjectProps = function (error, object) {
   }
 }
 
-const setNewErrorProperty = function (error, propName, propValue) {
+const setNewErrorProperty = (error, propName, propValue) => {
   if (propValue !== undefined) {
     setErrorProperty(error, propName, propValue)
   }

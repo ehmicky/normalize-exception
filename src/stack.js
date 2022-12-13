@@ -9,7 +9,7 @@ import { setErrorProperty } from './descriptors.js'
 // On SpiderMonkey:
 //  - `error.stack` is an inherited getter function
 //  - The following shadows it with an own property
-export const setStack = function (error) {
+export const setStack = (error) => {
   const stack = getStack(error.message, error.name)
   setErrorProperty(error, 'stack', stack)
 }
@@ -20,7 +20,7 @@ export const setStack = function (error) {
 // global object or deleting `Error.stackTraceLimit`.
 // We do not remove stack lines of `normalize-exception` itself, as it helps
 // users understand where the error was created.
-const getStack = function (message = '', name = 'Error') {
+const getStack = (message = '', name = 'Error') => {
   const StackError = getErrorClass(name)
   const { stack } = new StackError(message)
   return typeof stack === 'string' && stack !== ''
@@ -32,7 +32,7 @@ const getStack = function (message = '', name = 'Error') {
 // SpiderMonkey includes the constructor in `error.stack`.
 //  - Also it uses the constructor `Function.name` at function creation time
 //  - This requires creating an anonymous class and not assigning to a variable
-const getErrorClass = function (name) {
+const getErrorClass = (name) => {
   const descriptor = {
     value: name,
     enumerable: false,

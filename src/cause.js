@@ -11,7 +11,7 @@ import { setErrorProperty } from './descriptors.js'
 //  - `undefined` exceptions have no stack trace nor message, so not very
 //    useful anyway, except to indicate that an `undefined` value was thrown
 //    from somewhere else
-export const normalizeCause = function (error, recurse) {
+export const normalizeCause = (error, recurse) => {
   if (!('cause' in error)) {
     return
   }

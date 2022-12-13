@@ -5,11 +5,12 @@ import { setErrorProperty, normalizeDescriptors } from './descriptors.js'
 import { setStack } from './stack.js'
 
 // Ensure an exception is an Error instance with normal properties
-export default function normalizeException(error, { shallow = false } = {}) {
-  return recurseException(error, [], shallow)
-}
+const normalizeException = (error, { shallow = false } = {}) =>
+  recurseException(error, [], shallow)
 
-const recurseException = function (error, parents, shallow) {
+export default normalizeException
+
+const recurseException = (error, parents, shallow) => {
   if (parents.includes(error)) {
     return
   }
@@ -23,11 +24,9 @@ const recurseException = function (error, parents, shallow) {
   return errorA
 }
 
-const identity = function (error) {
-  return error
-}
+const identity = (error) => error
 
-const normalizeProps = function (error, recurse) {
+const normalizeProps = (error, recurse) => {
   normalizeName(error)
   normalizeMessage(error)
   normalizeStack(error)
@@ -41,7 +40,7 @@ const normalizeProps = function (error, recurse) {
 // `error.constructor.name` match
 //  - Although this is best practice, this is often not the case and changing
 //    it might break some logic
-const normalizeName = function (error) {
+const normalizeName = (error) => {
   if (isDefinedString(error.name)) {
     return
   }
@@ -54,19 +53,17 @@ const normalizeName = function (error) {
 }
 
 // Ensure `error.message` is a string
-const normalizeMessage = function (error) {
+const normalizeMessage = (error) => {
   if (!isDefinedString(error.message)) {
     setErrorProperty(error, 'message', '')
   }
 }
 
 // Ensure `error.stack` exists and looks normal
-const normalizeStack = function (error) {
+const normalizeStack = (error) => {
   if (!isDefinedString(error.stack)) {
     setStack(error)
   }
 }
 
-const isDefinedString = function (value) {
-  return typeof value === 'string' && value !== ''
-}
+const isDefinedString = (value) => typeof value === 'string' && value !== ''

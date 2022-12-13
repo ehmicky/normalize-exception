@@ -83,7 +83,7 @@ test('Plain-objects errors without messages are serialized even with recursion',
   t.is(error.message, String({}))
 })
 
-const throwError = function () {
+const throwError = () => {
   throw new Error('test')
 }
 

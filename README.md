@@ -280,7 +280,7 @@ try {
 ```js
 try {
   throw new Proxy(new Error('message'), {
-    get() {
+    get: () => {
       throw new Error('example')
     },
   })
@@ -298,7 +298,7 @@ try {
 try {
   const error = new Error('message')
   Object.defineProperty(error, 'message', {
-    get() {
+    get: () => {
       throw new Error('example')
     },
   })

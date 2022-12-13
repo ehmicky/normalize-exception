@@ -5,7 +5,7 @@ const { hasOwnProperty: hasOwn } = Object.prototype
 // Shallow copy object to handle exceptions in getter properties or proxies.
 // Include symbols.
 // Keep descriptor (enumerability, etc.).
-export const copyObject = function (object) {
+export const copyObject = (object) => {
   const objectCopy = {}
 
   // eslint-disable-next-line fp/no-loops
@@ -35,7 +35,7 @@ export const copyObject = function (object) {
 // `error.name` is often inherited. Also `error.stack` is inherited on
 // SpiderMonkey.
 // Exclude non-enumerable properties except for core error properties.
-const getPropsToCopy = function (object) {
+const getPropsToCopy = (object) => {
   const propNames = getOwnKeys(object)
 
   // eslint-disable-next-line fp/no-loops
@@ -51,7 +51,7 @@ const getPropsToCopy = function (object) {
 }
 
 // Handle hooks exceptions when `value` is a Proxy.
-const getOwnKeys = function (object) {
+const getOwnKeys = (object) => {
   try {
     return Reflect.ownKeys(object)
   } catch {
@@ -60,7 +60,7 @@ const getOwnKeys = function (object) {
 }
 
 // Handle hooks exceptions when `value` is a Proxy.
-const isInheritedProp = function (object, propName) {
+const isInheritedProp = (object, propName) => {
   try {
     return propName in object && !hasOwn.call(object, propName)
   } catch {

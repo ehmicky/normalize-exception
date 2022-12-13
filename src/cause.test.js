@@ -4,7 +4,7 @@ import { each } from 'test-each'
 
 const { propertyIsEnumerable: isEnum } = Object.prototype
 
-const hasErrorCause = function () {
+const hasErrorCause = () => {
   const { cause } = new Error('test', { cause: true })
   return cause === true
 }

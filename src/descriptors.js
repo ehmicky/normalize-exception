@@ -1,5 +1,5 @@
 // Ensure error properties are writable and non-enumerable
-export const normalizeDescriptors = function (error) {
+export const normalizeDescriptors = (error) => {
   CORE_ERROR_PROPS.forEach((propName) => {
     normalizeDescriptor(error, propName)
   })
@@ -7,7 +7,7 @@ export const normalizeDescriptors = function (error) {
 
 export const CORE_ERROR_PROPS = ['name', 'message', 'stack', 'cause', 'errors']
 
-const normalizeDescriptor = function (error, propName) {
+const normalizeDescriptor = (error, propName) => {
   const descriptor = getDescriptor(error, propName)
 
   if (descriptor === undefined) {
@@ -25,7 +25,7 @@ const normalizeDescriptor = function (error, propName) {
 }
 
 // `Error.name` is usually on the prototype, i.e. it is not an own property
-export const getDescriptor = function (value, propName) {
+export const getDescriptor = (value, propName) => {
   const descriptor = Object.getOwnPropertyDescriptor(value, propName)
 
   if (descriptor !== undefined) {
@@ -37,21 +37,19 @@ export const getDescriptor = function (value, propName) {
 }
 
 // Getters are allowed, but not readonly
-const isReadonlyGetter = function ({ get, set }) {
-  return get !== undefined && set === undefined
-}
+const isReadonlyGetter = ({ get, set }) =>
+  get !== undefined && set === undefined
 
-const isInvalidDescriptor = function ({ enumerable, writable }) {
-  return enumerable || !writable
-}
+const isInvalidDescriptor = ({ enumerable, writable }) =>
+  enumerable || !writable
 
 // Error properties are writable and non-enumerable
-export const setErrorProperty = function (error, propName, value) {
+export const setErrorProperty = (error, propName, value) => {
   setErrorDescriptor(error, propName, { value })
 }
 
 // Handle properties which are getters|setters
-const setErrorDescriptor = function (error, propName, descriptor) {
+const setErrorDescriptor = (error, propName, descriptor) => {
   // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(error, propName, {
     ...descriptor,

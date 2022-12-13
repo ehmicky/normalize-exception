@@ -8,7 +8,7 @@ import { stringifyError } from './string.js'
 const { toString: objectToString } = Object.prototype
 
 // If an exception is not an Error instance, create one.
-export const createError = function (value) {
+export const createError = (value) => {
   if (isErrorPlainObj(value)) {
     return objectifyError(value)
   }
@@ -25,7 +25,7 @@ export const createError = function (value) {
 }
 
 // Handle hooks exceptions when `value` is a Proxy.
-const isErrorPlainObj = function (value) {
+const isErrorPlainObj = (value) => {
   try {
     return isPlainObj(value)
   } catch {
@@ -33,18 +33,13 @@ const isErrorPlainObj = function (value) {
   }
 }
 
-const isInvalidError = function (value) {
-  return (
-    isProxy(value) ||
-    isNonModifiableError(value) ||
-    hasInvalidConstructor(value)
-  )
-}
+const isInvalidError = (value) =>
+  isProxy(value) || isNonModifiableError(value) || hasInvalidConstructor(value)
 
 // Proxies of Errors are converted to non-proxies.
 // This can only work within the same realm, because the only way to detect
 // proxies is combining `Object.prototype.toString()` and `instanceof`.
-const isProxy = function (value) {
+const isProxy = (value) => {
   try {
     return objectToString.call(value) === '[object Object]'
   } catch {
@@ -54,11 +49,8 @@ const isProxy = function (value) {
 
 // `error.constructor` is often used for type checking, so we ensure it
 // is normal.
-const hasInvalidConstructor = function (error) {
-  return (
-    typeof error.constructor !== 'function' ||
-    typeof error.constructor.name !== 'string' ||
-    error.constructor.name === '' ||
-    error.constructor.prototype !== Object.getPrototypeOf(error)
-  )
-}
+const hasInvalidConstructor = (error) =>
+  typeof error.constructor !== 'function' ||
+  typeof error.constructor.name !== 'string' ||
+  error.constructor.name === '' ||
+  error.constructor.prototype !== Object.getPrototypeOf(error)

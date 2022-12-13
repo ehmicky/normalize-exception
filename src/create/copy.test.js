@@ -1,12 +1,11 @@
 import test from 'ava'
 import normalizeException from 'normalize-exception'
 
-const setInvalidProp = function (propName) {
+const setInvalidProp = (propName) =>
   // eslint-disable-next-line fp/no-mutating-methods
-  return Object.defineProperty(new Error('test'), propName, { get: invalidGet })
-}
+  Object.defineProperty(new Error('test'), propName, { get: invalidGet })
 
-const invalidGet = function () {
+const invalidGet = () => {
   throw new Error('getterError')
 }
 
