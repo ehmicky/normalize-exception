@@ -1,6 +1,6 @@
 {
   "name": "normalize-exception",
-  "version": "2.11.0",
+  "version": "3.0.0",
   "type": "module",
   "exports": {
     "types": "./build/src/main.d.ts",
