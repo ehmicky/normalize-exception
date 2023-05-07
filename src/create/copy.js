@@ -1,7 +1,5 @@
 import { CORE_ERROR_PROPS, getDescriptor } from '../descriptors.js'
 
-const { hasOwnProperty: hasOwn } = Object.prototype
-
 // Shallow copy object to handle exceptions in getter properties or proxies.
 // Include symbols.
 // Keep descriptor (enumerability, etc.).
@@ -62,7 +60,7 @@ const getOwnKeys = (object) => {
 // Handle hooks exceptions when `value` is a Proxy.
 const isInheritedProp = (object, propName) => {
   try {
-    return propName in object && !hasOwn.call(object, propName)
+    return propName in object && !Object.hasOwn(object, propName)
   } catch {
     return false
   }

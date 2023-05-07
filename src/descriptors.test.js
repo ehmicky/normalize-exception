@@ -2,8 +2,7 @@ import test from 'ava'
 import normalizeException from 'normalize-exception'
 import { each } from 'test-each'
 
-const { propertyIsEnumerable: isEnum, hasOwnProperty: hasOwn } =
-  Object.prototype
+const { propertyIsEnumerable: isEnum } = Object.prototype
 
 test('Handles non-enumerable inherited error properties', (t) => {
   // eslint-disable-next-line fp/no-class
@@ -17,10 +16,10 @@ test('Handles non-enumerable inherited error properties', (t) => {
   })
   t.true(isEnum.call(TestError.prototype, 'name'))
   const error = new TestError('test')
-  t.false(hasOwn.call(error, 'name'))
+  t.false(Object.hasOwn(error, 'name'))
   t.true(isEnum.call(Object.getPrototypeOf(error), 'name'))
   const normalizedError = normalizeException(error)
-  t.true(hasOwn.call(normalizedError, 'name'))
+  t.true(Object.hasOwn(normalizedError, 'name'))
   t.false(isEnum.call(normalizedError, 'name'))
 })
 
