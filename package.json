@@ -55,7 +55,7 @@
     "test-each": "^5.7.1"
   },
   "engines": {
-    "node": ">=14.18.0"
+    "node": ">=16.17.0"
   },
   "dependencies": {
     "is-error-instance": "^1.6.0",
