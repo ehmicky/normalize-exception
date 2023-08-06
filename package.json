@@ -42,7 +42,10 @@
   ],
   "license": "MIT",
   "homepage": "https://www.github.com/ehmicky/normalize-exception",
-  "repository": "ehmicky/normalize-exception",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehmicky/normalize-exception.git"
+  },
   "bugs": {
     "url": "https://github.com/ehmicky/normalize-exception/issues"
   },
