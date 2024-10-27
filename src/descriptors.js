@@ -50,7 +50,6 @@ export const setErrorProperty = (error, propName, value) => {
 
 // Handle properties which are getters|setters
 const setErrorDescriptor = (error, propName, descriptor) => {
-  // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(error, propName, {
     ...descriptor,
     ...('get' in descriptor || 'set' in descriptor ? {} : { writable: true }),

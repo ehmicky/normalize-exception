@@ -20,7 +20,6 @@ each(
   ({ title }, { propName, value }, descriptor) => {
     test(`Fix invalid descriptors | ${title}`, (t) => {
       const error = new Error('test')
-      // eslint-disable-next-line fp/no-mutating-methods
       Object.defineProperty(error, propName, { ...descriptor, value })
       const errorA = normalizeException(error)
       const descriptorA = Object.getOwnPropertyDescriptor(errorA, propName)

@@ -2,7 +2,6 @@ import test from 'ava'
 import normalizeException from 'normalize-exception'
 
 const setInvalidProp = (propName) =>
-  // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(new Error('test'), propName, { get: invalidGet })
 
 const invalidGet = () => {
@@ -45,7 +44,6 @@ test('Handle throwing getters on plain objects', (t) => {
 test('Plain-objects errors ignore non-enumerable static properties', (t) => {
   t.is(
     normalizeException(
-      // eslint-disable-next-line fp/no-mutating-methods
       Object.defineProperty({ message: 'test' }, 'prop', {
         value: true,
         enumerable: false,
@@ -59,7 +57,6 @@ test('Plain-objects errors do not ignore non-enumerable core properties', (t) =>
   const name = 'TypeError'
   t.is(
     normalizeException(
-      // eslint-disable-next-line fp/no-mutating-methods
       Object.defineProperty({ message: 'test' }, 'name', {
         value: name,
         enumerable: false,
@@ -71,9 +68,7 @@ test('Plain-objects errors do not ignore non-enumerable core properties', (t) =>
 
 // eslint-disable-next-line fp/no-class
 class ChildError extends Error {}
-// eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(ChildError.prototype, 'message', { value: 'test' })
-// eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(ChildError.prototype, 'prop', { value: true })
 
 test('Plain-objects errors ignore inherited static properties', (t) => {

@@ -39,13 +39,11 @@ const getErrorClass = (name) => {
     writable: true,
     configurable: true,
   }
-  // eslint-disable-next-line fp/no-mutating-methods
   const StackError = Object.defineProperty(
     class extends Error {},
     'name',
     descriptor,
   )
-  // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(StackError.prototype, 'name', descriptor)
   return StackError
 }
