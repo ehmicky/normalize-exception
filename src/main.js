@@ -1,7 +1,7 @@
 import { normalizeAggregate } from './aggregate.js'
 import { normalizeCause } from './cause.js'
 import { createError } from './create/main.js'
-import { setErrorProperty, normalizeDescriptors } from './descriptors.js'
+import { normalizeDescriptors, setErrorProperty } from './descriptors.js'
 import { setStack } from './stack.js'
 
 // Ensure an exception is an Error instance with normal properties
