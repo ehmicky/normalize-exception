@@ -16,6 +16,7 @@ export const copyObject = (object) => {
         configurable,
         writable = true,
       } = getDescriptor(object, propName)
+      // eslint-disable-next-line fp/no-mutating-methods
       Object.defineProperty(objectCopy, propName, {
         value,
         enumerable,
@@ -39,6 +40,7 @@ const getPropsToCopy = (object) => {
   for (const propName of CORE_ERROR_PROPS) {
     // eslint-disable-next-line max-depth
     if (isInheritedProp(object, propName)) {
+      // eslint-disable-next-line fp/no-mutating-methods
       propNames.push(propName)
     }
   }

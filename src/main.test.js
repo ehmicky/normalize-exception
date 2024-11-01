@@ -47,9 +47,11 @@ each([undefined, true, ''], ({ title }, value) => {
 
 test.serial('Fix invalid error.name without constructor names', (t) => {
   const error = new TypeError('test')
+  // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(TypeError, 'name', { value: '' })
   error.name = ''
   t.is(normalizeException(error).name, 'Error')
+  // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(TypeError, 'name', { value: 'TypeError' })
 })
 

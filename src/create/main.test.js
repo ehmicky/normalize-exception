@@ -14,10 +14,13 @@ test('Plain-objects errors work cross-realm', (t) => {
 })
 
 const constructorWithoutName = () => {}
+// eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(constructorWithoutName, 'name', { value: false })
 const constructorWithEmptyName = () => {}
+// eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(constructorWithEmptyName, 'name', { value: '' })
 const constructorWithFakeName = () => {}
+// eslint-disable-next-line fp/no-mutating-methods
 Object.defineProperty(constructorWithFakeName, 'name', { value: 'Error' })
 each(
   [

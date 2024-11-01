@@ -7,6 +7,7 @@ const { propertyIsEnumerable: isEnum } = Object.prototype
 test('Handles non-enumerable inherited error properties', (t) => {
   // eslint-disable-next-line fp/no-class
   class TestError extends Error {}
+  // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(TestError.prototype, 'name', {
     value: TestError.name,
     writable: true,
@@ -24,6 +25,7 @@ test('Handles non-enumerable inherited error properties', (t) => {
 
 test('Handles non-enumerable getters', (t) => {
   const error = new Error('test')
+  // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(error, 'message', {
     get: getMessage,
     set: setMessage,
@@ -43,6 +45,7 @@ test('Handles non-enumerable getters', (t) => {
 
 test('Handles readonly getters', (t) => {
   const error = new Error('test')
+  // eslint-disable-next-line fp/no-mutating-methods
   Object.defineProperty(error, 'message', {
     get: getMessage,
     enumerable: true,
@@ -72,6 +75,7 @@ each(
     test(`Non-standard error properties are left as is | ${title}`, (t) => {
       const error = new Error('test')
       const value = 0
+      // eslint-disable-next-line fp/no-mutating-methods
       Object.defineProperty(error, propName, {
         value,
         enumerable,
